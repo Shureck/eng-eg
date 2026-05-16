@@ -1,6 +1,6 @@
 import rawEn from "./questions.json";
 import rawRu from "./questions.ru.json";
-import type { AnyQ, QuestionBank } from "../types";
+import type { AnyQ, QuestionBank, Type1Q, Type2Q, Type3Q } from "../types";
 
 export const BANK_EN = rawEn as unknown as QuestionBank;
 export const BANK_RU_OVERLAY = rawRu as unknown as QuestionBank;
@@ -8,8 +8,44 @@ export const BANK_RU_OVERLAY = rawRu as unknown as QuestionBank;
 /** Совместимость: канонический английский банк */
 export const BANK = BANK_EN;
 
+/** Режим только EN: убираем русские подстрочники (они могут быть встроены в questions.json). */
+function type1ForEnglishUi(q: Type1Q): Type1Q {
+  const correctText = q.options.find((o) => o.key === q.correct)?.text ?? "";
+  return {
+    ...q,
+    translation_ru: "",
+    options_ru: q.options.map((o) => o.text),
+    explanation_ru: correctText ? `Correct answer — option ${q.correct}: «${correctText}».` : "",
+  };
+}
+
+function type2ForEnglishUi(q: Type2Q): Type2Q {
+  return {
+    ...q,
+    terms_ru: [...q.terms],
+    definitions_ru: [...q.definitions],
+    translation_ru: "",
+    explanation_ru: "",
+  };
+}
+
+function type3ForEnglishUi(q: Type3Q): Type3Q {
+  return {
+    ...q,
+    words: q.words.map((w) => ({ ...w, text_ru: w.text })),
+    translation_ru: "",
+    explanation_ru: "",
+  };
+}
+
 export function mergeQuestionBank(useRussianUi: boolean): QuestionBank {
-  if (!useRussianUi) return BANK_EN;
+  if (!useRussianUi) {
+    return {
+      type1: BANK_EN.type1.map(type1ForEnglishUi),
+      type2: BANK_EN.type2.map(type2ForEnglishUi),
+      type3: BANK_EN.type3.map(type3ForEnglishUi),
+    };
+  }
   const R = BANK_RU_OVERLAY;
   return {
     type1: BANK_EN.type1.map((q) => {
