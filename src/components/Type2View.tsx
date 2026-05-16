@@ -8,6 +8,7 @@ export function Type2View({
   questionUiRussian,
   reveal,
   disabled,
+  promptVariant = "full",
 }: {
   q: Type2Q;
   map: Record<string, number>;
@@ -16,6 +17,8 @@ export function Type2View({
   questionUiRussian: boolean;
   reveal: boolean;
   disabled: boolean;
+  /** SRS: крупно keyword_hint, без полного перевода задания сверху */
+  promptVariant?: "full" | "keyword";
 }) {
   const ok = q.terms.every((t) => {
     const ix = map[t];
@@ -25,14 +28,27 @@ export function Type2View({
 
   const filled = q.terms.every((t) => map[t] >= 0);
 
+  const useKeywordOnly = promptVariant === "keyword";
+  const keywordOrFallback =
+    q.keyword_hint?.trim() || q.translation_ru || "Сопоставьте термины и определения";
+
   return (
     <div className="space-y-4">
-      <p className="text-lg font-medium">Сопоставьте термины и определения</p>
-      {!questionUiRussian && showRu && (
-        <p className="text-slate-600 dark:text-slate-400">{q.translation_ru}</p>
-      )}
-      {questionUiRussian && (
-        <p className="text-slate-600 dark:text-slate-400 text-sm">{q.translation_ru}</p>
+      {useKeywordOnly ? (
+        <>
+          <p className="text-xl leading-snug font-semibold whitespace-pre-wrap">{keywordOrFallback}</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Сопоставьте термины и определения</p>
+        </>
+      ) : (
+        <>
+          <p className="text-lg font-medium">Сопоставьте термины и определения</p>
+          {!questionUiRussian && showRu && (
+            <p className="text-slate-600 dark:text-slate-400">{q.translation_ru}</p>
+          )}
+          {questionUiRussian && (
+            <p className="text-slate-600 dark:text-slate-400 text-sm">{q.translation_ru}</p>
+          )}
+        </>
       )}
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-3">

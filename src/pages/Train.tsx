@@ -9,14 +9,19 @@ import {
   saveSrsQueueSnapshot,
 } from "../lib/srsQueueStorage";
 import { Type1View } from "../components/Type1View";
+import { CheatMnemonicLine, QuestionKeyOnlyLine } from "../components/CheatMnemonicLine";
+import { CardWithActionsRail } from "../components/CardWithActionsRail";
 import { Type2View, emptyMap2, gradeType2 } from "../components/Type2View";
 import { Type3View, gradeType3, initialOrder3 } from "../components/Type3View";
+import { getCheatT1, getCheatT2, getCheatT3 } from "../data/lightningCheatSheet";
+import { useCheatMnemonicVisible } from "../lib/cheatVisibility";
 import { isDue, markHard, onCorrect, onWrong } from "../lib/srs";
 import { shuffle } from "../lib/shuffle";
 
 export default function Train() {
   const { bank, questionUiRussian } = useQuestionLang();
   const { map, ready, save } = useProgress();
+  const [cheatVisible, setCheatVisible] = useCheatMnemonicVisible();
   const [queue, setQueue] = useState<string[]>([]);
   const [qi, setQi] = useState(0);
   /** Не трогаем localStorage, пока не решили: восстановить сессию или собрать очередь заново */
@@ -97,9 +102,19 @@ export default function Train() {
     <div className="space-y-6">
       <div className="flex justify-between flex-wrap gap-2 items-center">
         <h1 className="text-xl font-bold">SRS-тренировка</h1>
-        <button type="button" className="min-h-touch px-3 rounded-lg border text-sm" onClick={rebuild}>
-          Новая очередь
-        </button>
+        <div className="flex flex-wrap gap-2 justify-end">
+          <button
+            type="button"
+            className="min-h-touch px-3 rounded-lg border text-sm"
+            aria-pressed={cheatVisible}
+            onClick={() => setCheatVisible(!cheatVisible)}
+          >
+            Шпаргалка: {cheatVisible ? "вкл" : "выкл"}
+          </button>
+          <button type="button" className="min-h-touch px-3 rounded-lg border text-sm" onClick={rebuild}>
+            Новая очередь
+          </button>
+        </div>
       </div>
       <p className="text-sm text-slate-500">
         Карточка {qi + 1} из {queue.length || "…"} (по расписанию коробок). Очередь и номер карточки сохраняются при
@@ -108,49 +123,94 @@ export default function Train() {
 
       {!key && <p className="text-amber-700 dark:text-amber-400">На сегодня всё повторено — загляните позже или нажмите «Новая очередь».</p>}
 
-      {aq?.kind === "t1" && (
-        <>
+      {aq?.kind === "t1" && (() => {
+        const cheatPair = getCheatT1(aq.data.id) ?? null;
+        return (
+        <CardWithActionsRail
+          actions={
+            <>
+              {!reveal && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium"
+                  disabled={!pick}
+                  onClick={submitT1}
+                >
+                  Проверить
+                </button>
+              )}
+              {reveal && (
+                <>
+                  <button
+                    type="button"
+                    className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                    onClick={() => void applySrs(pick === aq.data.correct)}
+                  >
+                    Дальше (учесть ответ)
+                  </button>
+                  <button
+                    type="button"
+                    className="min-h-touch w-full px-4 rounded-xl border border-amber-500 font-medium"
+                    onClick={async () => {
+                      if (!key || aq?.kind !== "t1") return;
+                      await save(markHard({ ...(map.get(key) ?? defaultProgress(key)), qid: key }));
+                      void applySrs(pick === aq.data.correct);
+                    }}
+                  >
+                    Сложно → в слабые
+                  </button>
+                </>
+              )}
+            </>
+          }
+        >
           <Type1View
             q={aq.data}
             mode="train"
             showRu={!questionUiRussian}
             questionUiRussian={questionUiRussian}
+            cheatMnemonic={cheatVisible ? cheatPair : null}
+            questionKeyOnly={!cheatVisible ? cheatPair?.hook?.trim() || null : null}
+            promptVariant="keyword"
             pick={pick}
             onPick={setPick}
             reveal={reveal}
           />
-          {!reveal && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" disabled={!pick} onClick={submitT1}>
-              Проверить
-            </button>
-          )}
-          {reveal && (
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-                onClick={() => void applySrs(pick === aq.data.correct)}
-              >
-                Дальше (учесть ответ)
-              </button>
-              <button
-                type="button"
-                className="min-h-touch px-4 rounded-xl border border-amber-500 font-medium"
-                onClick={async () => {
-                  if (!key || aq?.kind !== "t1") return;
-                  await save(markHard({ ...(map.get(key) ?? defaultProgress(key)), qid: key }));
-                  void applySrs(pick === aq.data.correct);
-                }}
-              >
-                Сложно → в слабые
-              </button>
-            </div>
-          )}
-        </>
-      )}
+        </CardWithActionsRail>
+        );
+      })()}
 
       {aq?.kind === "t2" && (
-        <>
+        <CardWithActionsRail
+          actions={
+            <>
+              {!reveal && (
+                <button type="button" className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={submitT2}>
+                  Проверить
+                </button>
+              )}
+              {reveal && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                  onClick={() => void applySrs(gradeType2(aq.data, map2))}
+                >
+                  Дальше
+                </button>
+              )}
+            </>
+          }
+        >
+          {cheatVisible &&
+            (() => {
+              const ch = getCheatT2(aq.data.id);
+              return ch ? <CheatMnemonicLine dense className="mb-2" hook={ch.hook} answerKey={ch.answerKey} /> : null;
+            })()}
+          {!cheatVisible &&
+            (() => {
+              const ch = getCheatT2(aq.data.id);
+              return ch?.hook?.trim() ? <QuestionKeyOnlyLine dense hook={ch.hook} className="mb-2" /> : null;
+            })()}
           <Type2View
             q={aq.data}
             map={map2}
@@ -159,31 +219,51 @@ export default function Train() {
             questionUiRussian={questionUiRussian}
             reveal={reveal}
             disabled={reveal}
+            promptVariant="keyword"
           />
-          {!reveal && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={submitT2}>
-              Проверить
-            </button>
-          )}
-          {reveal && (
-            <button
-              type="button"
-              className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-              onClick={() => void applySrs(gradeType2(aq.data, map2))}
-            >
-              Дальше
-            </button>
-          )}
-        </>
+        </CardWithActionsRail>
       )}
 
       {aq?.kind === "t3" && (
-        <>
-          {!reveal && (
-            <button type="button" className="min-h-touch px-3 rounded-lg border text-sm mb-2" onClick={() => setHint3(true)}>
-              Подсказка (первое слово)
-            </button>
-          )}
+        <CardWithActionsRail
+          actions={
+            <>
+              {!reveal && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-3 rounded-lg border text-sm"
+                  onClick={() => setHint3(true)}
+                >
+                  Подсказка (первое слово)
+                </button>
+              )}
+              {!reveal && (
+                <button type="button" className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={submitT3}>
+                  Проверить
+                </button>
+              )}
+              {reveal && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                  onClick={() => void applySrs(gradeType3(aq.data, order3))}
+                >
+                  Дальше
+                </button>
+              )}
+            </>
+          }
+        >
+          {cheatVisible &&
+            (() => {
+              const ch = getCheatT3(aq.data.id);
+              return ch ? <CheatMnemonicLine dense className="mb-2" hook={ch.hook} answerKey={ch.answerKey} /> : null;
+            })()}
+          {!cheatVisible &&
+            (() => {
+              const ch = getCheatT3(aq.data.id);
+              return ch?.hook?.trim() ? <QuestionKeyOnlyLine dense hook={ch.hook} className="mb-2" /> : null;
+            })()}
           <Type3View
             q={aq.data}
             order={order3}
@@ -193,22 +273,9 @@ export default function Train() {
             reveal={reveal}
             disabled={reveal}
             showHint={hint3}
+            promptVariant="keyword"
           />
-          {!reveal && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={submitT3}>
-              Проверить
-            </button>
-          )}
-          {reveal && (
-            <button
-              type="button"
-              className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-              onClick={() => void applySrs(gradeType3(aq.data, order3))}
-            >
-              Дальше
-            </button>
-          )}
-        </>
+        </CardWithActionsRail>
       )}
     </div>
   );

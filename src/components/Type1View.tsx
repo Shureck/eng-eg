@@ -1,4 +1,6 @@
 import type { Type1Q } from "../types";
+import type { CheatPair } from "../data/lightningCheatSheet";
+import { CheatMnemonicLine, QuestionKeyOnlyLine } from "./CheatMnemonicLine";
 import { speak } from "../lib/tts";
 
 export function NegWarn({ on }: { on: boolean }) {
@@ -22,6 +24,9 @@ export function Type1View({
   mode,
   showRu,
   questionUiRussian,
+  cheatMnemonic,
+  questionKeyOnly,
+  promptVariant = "full",
   pick,
   onPick,
   reveal,
@@ -32,25 +37,49 @@ export function Type1View({
   showRu: boolean;
   /** Основной текст вопроса и вариантов — русский (из translation_ru / options_ru) */
   questionUiRussian: boolean;
+  /** Цветная шпаргалка «ключ → ответ» (SRS / обучение / слабые) */
+  cheatMnemonic?: CheatPair | null;
+  /** Строка «Ключ вопроса» без подсказки к ответу (если полная шпаргалка выключена) */
+  questionKeyOnly?: string | null;
+  /** SRS: только keyword_hint вместо полного текста вопроса */
+  promptVariant?: "full" | "keyword";
   pick: string | null;
   onPick?: (k: string) => void;
   reveal: boolean;
 }) {
   const disabledPick = mode === "learn" || reveal;
 
-  const primaryQ = questionUiRussian ? q.translation_ru || q.question : q.question;
+  const useKeywordOnly = promptVariant === "keyword" && mode === "train";
+
+  const keywordOrFull =
+    q.keyword_hint?.trim() ||
+    (questionUiRussian ? q.translation_ru || q.question : q.question);
+
+  const primaryQ = useKeywordOnly
+    ? keywordOrFull
+    : questionUiRussian
+      ? q.translation_ru || q.question
+      : q.question;
   const secondaryQ =
-    mode !== "exam"
-      ? questionUiRussian
-        ? q.question
-        : showRu
-          ? q.translation_ru
-          : null
-      : null;
+    useKeywordOnly
+      ? null
+      : mode !== "exam"
+        ? questionUiRussian
+          ? q.question
+          : showRu
+            ? q.translation_ru
+            : null
+        : null;
 
   return (
     <div className="space-y-4">
       <NegWarn on={q.hasNegation} />
+      {cheatMnemonic && mode !== "exam" && (
+        <CheatMnemonicLine dense hook={cheatMnemonic.hook} answerKey={cheatMnemonic.answerKey} className="mb-1" />
+      )}
+      {!cheatMnemonic && questionKeyOnly && mode !== "exam" && (
+        <QuestionKeyOnlyLine dense hook={questionKeyOnly} className="mb-1" />
+      )}
       <div className="flex gap-2 flex-wrap items-start">
         <div className="flex-1 space-y-2">
           <p className="text-lg leading-relaxed whitespace-pre-wrap">{primaryQ}</p>
@@ -67,7 +96,11 @@ export function Type1View({
             aria-label="Озвучить вопрос"
             onClick={() =>
               speak(
-                questionUiRussian ? q.translation_ru || stripQuestionIntro(q.question) : stripQuestionIntro(q.question),
+                useKeywordOnly
+                  ? keywordOrFull
+                  : questionUiRussian
+                    ? q.translation_ru || stripQuestionIntro(q.question)
+                    : stripQuestionIntro(q.question),
                 questionUiRussian ? "ru-RU" : "en-US",
               )
             }

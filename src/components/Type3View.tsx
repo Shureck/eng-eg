@@ -76,6 +76,7 @@ export function Type3View({
   reveal,
   disabled,
   showHint,
+  promptVariant = "full",
 }: {
   q: Type3Q;
   order: string[];
@@ -85,6 +86,7 @@ export function Type3View({
   reveal: boolean;
   disabled: boolean;
   showHint: boolean;
+  promptVariant?: "full" | "keyword";
 }) {
   const byKey = useMemo(() => Object.fromEntries(q.words.map((w) => [w.key, w])), [q.words]);
 
@@ -122,13 +124,24 @@ export function Type3View({
     firstW &&
     (questionUiRussian ? firstW.text_ru || firstW.text : firstW.text);
 
+  const useKeywordOnly = promptVariant === "keyword";
+  const keywordOrFallback =
+    q.keyword_hint?.trim() || q.translation_ru || "Расставьте фрагменты в правильном порядке";
+
   return (
     <div className="space-y-4">
-      <p className="text-lg">Расставьте фрагменты в правильном порядке</p>
-      {showRu && !reveal && !questionUiRussian && (
+      {useKeywordOnly ? (
+        <>
+          <p className="text-xl leading-snug font-semibold whitespace-pre-wrap">{keywordOrFallback}</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Расставьте фрагменты в правильном порядке</p>
+        </>
+      ) : (
+        <p className="text-lg">Расставьте фрагменты в правильном порядке</p>
+      )}
+      {!useKeywordOnly && showRu && !reveal && !questionUiRussian && (
         <p className="text-slate-600 dark:text-slate-400">{q.translation_ru}</p>
       )}
-      {questionUiRussian && !reveal && (
+      {!useKeywordOnly && questionUiRussian && !reveal && (
         <p className="text-slate-600 dark:text-slate-400 text-sm">{q.translation_ru}</p>
       )}
       {showHint && !reveal && firstHint && (

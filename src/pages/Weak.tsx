@@ -9,14 +9,19 @@ import {
   saveWeakQueueSnapshot,
 } from "../lib/srsQueueStorage";
 import { Type1View } from "../components/Type1View";
+import { CheatMnemonicLine, QuestionKeyOnlyLine } from "../components/CheatMnemonicLine";
+import { CardWithActionsRail } from "../components/CardWithActionsRail";
 import { Type2View, emptyMap2, gradeType2 } from "../components/Type2View";
 import { Type3View, gradeType3, initialOrder3 } from "../components/Type3View";
+import { getCheatT1, getCheatT2, getCheatT3 } from "../data/lightningCheatSheet";
+import { useWeakCheatLevel, type WeakCheatLevel } from "../lib/weakCheatLevel";
 import { isDue, onCorrectWeak, onWrong } from "../lib/srs";
 import { shuffle } from "../lib/shuffle";
 
 export default function Weak() {
   const { bank, questionUiRussian } = useQuestionLang();
   const { map, ready, save } = useProgress();
+  const [weakCheatLevel, setWeakCheatLevel] = useWeakCheatLevel();
   const [queue, setQueue] = useState<string[]>([]);
   const [qi, setQi] = useState(0);
   const [weakBootstrapped, setWeakBootstrapped] = useState(false);
@@ -110,9 +115,39 @@ export default function Weak() {
     <div className="space-y-6">
       <div className="flex justify-between flex-wrap gap-2 items-center">
         <h1 className="text-xl font-bold">Слабые места</h1>
-        <button type="button" className="min-h-touch px-3 rounded-lg border text-sm" onClick={rebuild}>
-          Обновить список
-        </button>
+        <div className="flex flex-wrap gap-2 justify-end items-center">
+          <span className="text-sm text-slate-600 dark:text-slate-400 shrink-0">Шпаргалка:</span>
+          <div
+            className="flex rounded-lg border border-slate-300 dark:border-slate-600 overflow-hidden divide-x divide-slate-300 dark:divide-slate-600"
+            role="group"
+            aria-label="Уровень шпаргалки"
+          >
+            {(
+              [
+                [0, "Выкл"],
+                [1, "Ключ"],
+                [2, "Полная"],
+              ] as const
+            ).map(([lv, label]) => (
+              <button
+                key={lv}
+                type="button"
+                className={`min-h-touch px-2.5 sm:px-3 text-xs sm:text-sm transition-colors ${
+                  weakCheatLevel === lv
+                    ? "bg-sky-600 text-white font-medium"
+                    : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                }`}
+                aria-pressed={weakCheatLevel === lv}
+                onClick={() => setWeakCheatLevel(lv as WeakCheatLevel)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <button type="button" className="min-h-touch px-3 rounded-lg border text-sm" onClick={rebuild}>
+            Обновить список
+          </button>
+        </div>
       </div>
       <p className="text-sm text-slate-600 dark:text-slate-400">
         Всего помечено слабыми: <strong>{weakStats.markedWeak}</strong>
@@ -133,35 +168,78 @@ export default function Weak() {
       )}
 
       {aq?.kind === "t1" && (
-        <>
+        <CardWithActionsRail
+          actions={
+            <>
+              {!reveal && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium"
+                  disabled={!pick}
+                  onClick={() => setReveal(true)}
+                >
+                  Проверить
+                </button>
+              )}
+              {reveal && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                  onClick={() => void applySrs(pick === aq.data.correct)}
+                >
+                  Дальше
+                </button>
+              )}
+            </>
+          }
+        >
           <Type1View
             q={aq.data}
             mode="train"
             showRu={!questionUiRussian}
             questionUiRussian={questionUiRussian}
+            cheatMnemonic={weakCheatLevel >= 2 ? (getCheatT1(aq.data.id) ?? null) : null}
+            questionKeyOnly={
+              weakCheatLevel === 1 ? (getCheatT1(aq.data.id)?.hook?.trim() || null) : null
+            }
             pick={pick}
             onPick={setPick}
             reveal={reveal}
           />
-          {!reveal && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" disabled={!pick} onClick={() => setReveal(true)}>
-              Проверить
-            </button>
-          )}
-          {reveal && (
-            <button
-              type="button"
-              className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-              onClick={() => void applySrs(pick === aq.data.correct)}
-            >
-              Дальше
-            </button>
-          )}
-        </>
+        </CardWithActionsRail>
       )}
 
       {aq?.kind === "t2" && (
-        <>
+        <CardWithActionsRail
+          actions={
+            <>
+              {!reveal && (
+                <button type="button" className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={() => setReveal(true)}>
+                  Проверить
+                </button>
+              )}
+              {reveal && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                  onClick={() => void applySrs(gradeType2(aq.data, map2))}
+                >
+                  Дальше
+                </button>
+              )}
+            </>
+          }
+        >
+          {weakCheatLevel >= 2 &&
+            (() => {
+              const ch = getCheatT2(aq.data.id);
+              return ch ? <CheatMnemonicLine dense className="mb-2" hook={ch.hook} answerKey={ch.answerKey} /> : null;
+            })()}
+          {weakCheatLevel === 1 &&
+            (() => {
+              const ch = getCheatT2(aq.data.id);
+              return ch?.hook?.trim() ? <QuestionKeyOnlyLine dense hook={ch.hook} className="mb-2" /> : null;
+            })()}
           <Type2View
             q={aq.data}
             map={map2}
@@ -171,30 +249,45 @@ export default function Weak() {
             reveal={reveal}
             disabled={reveal}
           />
-          {!reveal && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={() => setReveal(true)}>
-              Проверить
-            </button>
-          )}
-          {reveal && (
-            <button
-              type="button"
-              className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-              onClick={() => void applySrs(gradeType2(aq.data, map2))}
-            >
-              Дальше
-            </button>
-          )}
-        </>
+        </CardWithActionsRail>
       )}
 
       {aq?.kind === "t3" && (
-        <>
-          {!reveal && (
-            <button type="button" className="min-h-touch px-3 rounded-lg border text-sm mb-2" onClick={() => setHint3(true)}>
-              Подсказка
-            </button>
-          )}
+        <CardWithActionsRail
+          actions={
+            <>
+              {!reveal && (
+                <button type="button" className="min-h-touch w-full px-3 rounded-lg border text-sm" onClick={() => setHint3(true)}>
+                  Подсказка
+                </button>
+              )}
+              {!reveal && (
+                <button type="button" className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={() => setReveal(true)}>
+                  Проверить
+                </button>
+              )}
+              {reveal && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                  onClick={() => void applySrs(gradeType3(aq.data, order3))}
+                >
+                  Дальше
+                </button>
+              )}
+            </>
+          }
+        >
+          {weakCheatLevel >= 2 &&
+            (() => {
+              const ch = getCheatT3(aq.data.id);
+              return ch ? <CheatMnemonicLine dense className="mb-2" hook={ch.hook} answerKey={ch.answerKey} /> : null;
+            })()}
+          {weakCheatLevel === 1 &&
+            (() => {
+              const ch = getCheatT3(aq.data.id);
+              return ch?.hook?.trim() ? <QuestionKeyOnlyLine dense hook={ch.hook} className="mb-2" /> : null;
+            })()}
           <Type3View
             q={aq.data}
             order={order3}
@@ -205,21 +298,7 @@ export default function Weak() {
             disabled={reveal}
             showHint={hint3}
           />
-          {!reveal && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={() => setReveal(true)}>
-              Проверить
-            </button>
-          )}
-          {reveal && (
-            <button
-              type="button"
-              className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-              onClick={() => void applySrs(gradeType3(aq.data, order3))}
-            >
-              Дальше
-            </button>
-          )}
-        </>
+        </CardWithActionsRail>
       )}
     </div>
   );

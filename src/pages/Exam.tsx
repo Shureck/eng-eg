@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { pickExamDeck } from "../lib/exam";
 import { Type1View } from "../components/Type1View";
+import { CardWithActionsRail } from "../components/CardWithActionsRail";
 import { Type2View, emptyMap2, gradeType2 } from "../components/Type2View";
 import { Type3View, gradeType3, initialOrder3 } from "../components/Type3View";
 import type { AnyQ } from "../types";
@@ -152,27 +153,56 @@ export default function Exam() {
       </p>
 
       {cur?.kind === "t1" && (
-        <>
+        <CardWithActionsRail
+          actions={
+            <>
+              {!revealed && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium"
+                  disabled={!pick}
+                  onClick={() => setRevealed(true)}
+                >
+                  Ответить
+                </button>
+              )}
+              {revealed && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                  onClick={() => void advance(pick === cur.data.correct)}
+                >
+                  Следующий
+                </button>
+              )}
+            </>
+          }
+        >
           <Type1View q={cur.data} mode="exam" showRu={false} questionUiRussian={false} pick={pick} onPick={setPick} reveal={revealed} />
-          {!revealed && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" disabled={!pick} onClick={() => setRevealed(true)}>
-              Ответить
-            </button>
-          )}
-          {revealed && (
-            <button
-              type="button"
-              className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-              onClick={() => void advance(pick === cur.data.correct)}
-            >
-              Следующий
-            </button>
-          )}
-        </>
+        </CardWithActionsRail>
       )}
 
       {cur?.kind === "t2" && (
-        <>
+        <CardWithActionsRail
+          actions={
+            <>
+              {!revealed && (
+                <button type="button" className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={() => setRevealed(true)}>
+                  Ответить
+                </button>
+              )}
+              {revealed && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                  onClick={() => void advance(gradeType2(cur.data, map2))}
+                >
+                  Следующий
+                </button>
+              )}
+            </>
+          }
+        >
           <Type2View
             q={cur.data}
             map={map2}
@@ -182,25 +212,30 @@ export default function Exam() {
             reveal={revealed}
             disabled={revealed}
           />
-          {!revealed && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={() => setRevealed(true)}>
-              Ответить
-            </button>
-          )}
-          {revealed && (
-            <button
-              type="button"
-              className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-              onClick={() => void advance(gradeType2(cur.data, map2))}
-            >
-              Следующий
-            </button>
-          )}
-        </>
+        </CardWithActionsRail>
       )}
 
       {cur?.kind === "t3" && (
-        <>
+        <CardWithActionsRail
+          actions={
+            <>
+              {!revealed && (
+                <button type="button" className="min-h-touch w-full px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={() => setRevealed(true)}>
+                  Ответить
+                </button>
+              )}
+              {revealed && (
+                <button
+                  type="button"
+                  className="min-h-touch w-full px-4 rounded-xl bg-emerald-600 text-white font-medium"
+                  onClick={() => void advance(gradeType3(cur.data, order3))}
+                >
+                  Следующий
+                </button>
+              )}
+            </>
+          }
+        >
           <Type3View
             q={cur.data}
             order={order3}
@@ -211,21 +246,7 @@ export default function Exam() {
             disabled={revealed}
             showHint={false}
           />
-          {!revealed && (
-            <button type="button" className="min-h-touch px-4 rounded-xl bg-sky-600 text-white font-medium" onClick={() => setRevealed(true)}>
-              Ответить
-            </button>
-          )}
-          {revealed && (
-            <button
-              type="button"
-              className="min-h-touch px-4 rounded-xl bg-emerald-600 text-white font-medium"
-              onClick={() => void advance(gradeType3(cur.data, order3))}
-            >
-              Следующий
-            </button>
-          )}
-        </>
+        </CardWithActionsRail>
       )}
     </div>
   );

@@ -108,6 +108,14 @@ def main() -> None:
             di = q["definitions"].index(d_en)
             pairs_txt.append(f"{terms_ru[ti]} → {defs_ru[di]}")
         expl = tr("Correct pairs: " + "; ".join(pairs_txt) + " Memorize them.", cache)
+        trans_line = (q.get("translation_ru") or "").strip()
+        keyword_line = (q.get("keyword_hint") or "").strip()
+        if trans_line and re.search(r"[А-Яа-яЁё]", trans_line):
+            transl = trans_line
+            if keyword_line:
+                transl = f"{transl} ({tr(keyword_line, cache)})"
+        else:
+            transl = tr(trans_line or keyword_line or "Match each term with its definition.", cache)
         out["type2"].append(
             {
                 **q,
