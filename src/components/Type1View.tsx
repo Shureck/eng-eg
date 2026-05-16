@@ -1,7 +1,7 @@
 import type { Type1Q } from "../types";
 import type { CheatPair } from "../data/lightningCheatSheet";
 import { CheatMnemonicLine, QuestionKeyOnlyLine } from "./CheatMnemonicLine";
-import { ruBelowEn, stripQuestionIntro } from "../lib/bilingualLines";
+import { keywordHintOrFallback, ruBelowEn, stripQuestionIntro } from "../lib/bilingualLines";
 import { speak } from "../lib/tts";
 
 export function NegWarn({ on, compact }: { on: boolean; compact?: boolean }) {
@@ -53,7 +53,7 @@ export function Type1View({
   const useKeywordOnly = promptVariant === "keyword" && mode === "train";
 
   const questionEn = stripQuestionIntro(q.question);
-  const keywordEn = q.keyword_hint?.trim() || questionEn;
+  const keywordEn = keywordHintOrFallback(q.keyword_hint, questionEn);
 
   const primaryQ = useKeywordOnly ? keywordEn : questionEn;
 

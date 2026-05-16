@@ -14,6 +14,17 @@ export function stripQuestionIntro(en: string): string {
     .trim();
 }
 
+/**
+ * В данных часть keyword_hint сохранена обрезанной (суффикс … U+2026 или ...).
+ * Для режима «keyword» тогда показываем полный fallback (вопрос / предложение / термины).
+ */
+export function keywordHintOrFallback(keywordHint: string | undefined | null, fallback: string): string {
+  const t = keywordHint?.trim();
+  if (!t) return fallback;
+  if (t.endsWith("\u2026") || t.endsWith("...")) return fallback;
+  return t;
+}
+
 const T2_INSTRUCTION_EN = "Match each English term with its definition.";
 const T3_INSTRUCTION_EN = "Put the word fragments in the correct order to form a proper English sentence.";
 

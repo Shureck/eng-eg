@@ -3,7 +3,7 @@ import { useQuestionLang } from "../context/QuestionLangContext";
 import { CheatMnemonicLine } from "../components/CheatMnemonicLine";
 import { getCheatT1, getCheatT2, getCheatT3 } from "../data/lightningCheatSheet";
 import { useLightningDisplayMode, type LightningDisplayMode } from "../lib/lightningDisplayMode";
-import { ruBelowEn, stripQuestionIntro } from "../lib/bilingualLines";
+import { keywordHintOrFallback, ruBelowEn, stripQuestionIntro } from "../lib/bilingualLines";
 
 type LightningRow = {
   id: string;
@@ -32,7 +32,7 @@ export default function Lightning() {
     const ok = q.options.find((o) => o.key === q.correct)?.text ?? "";
     const ruOpt = ix >= 0 ? q.options_ru[ix] : "";
     const questionEn = stripQuestionIntro(q.question).trim();
-    const kw = q.keyword_hint?.trim() || "";
+    const compactKey = keywordHintOrFallback(q.keyword_hint, questionEn);
     const answerEn = `${q.correct}) ${ok}`;
     rows.push({
       id: `t1-${q.id}`,
@@ -41,7 +41,7 @@ export default function Lightning() {
       questionRu: ruBelowEn(questionEn, q.translation_ru),
       answerEn,
       answerRu: ruBelowEn(ok, ruOpt),
-      fallbackK: kw || questionEn,
+      fallbackK: compactKey,
       fallbackA: answerEn,
     });
   }
@@ -54,7 +54,7 @@ export default function Lightning() {
         return `${t} → ${defShown?.slice(0, 80)}…`;
       })
       .join("; ");
-    const questionEn = (q.keyword_hint?.trim() || q.terms.join(", ")).trim();
+    const questionEn = keywordHintOrFallback(q.keyword_hint, q.terms.join(", ")).trim();
     rows.push({
       id: `t2-${q.id}`,
       cheat: getCheatT2(q.id),
@@ -62,12 +62,12 @@ export default function Lightning() {
       questionRu: ruBelowEn(questionEn, q.translation_ru),
       answerEn: bits,
       answerRu: null,
-      fallbackK: q.keyword_hint?.trim() || questionEn,
+      fallbackK: keywordHintOrFallback(q.keyword_hint, questionEn),
       fallbackA: bits,
     });
   }
   for (const q of bank.type3) {
-    const questionEn = (q.keyword_hint?.trim() || q.full_sentence?.trim() || "").trim();
+    const questionEn = keywordHintOrFallback(q.keyword_hint, q.full_sentence?.trim() || "").trim();
     const answerEn = q.full_sentence.trim();
     const questionRu = ruBelowEn(questionEn, q.translation_ru);
     const rawAnswerRu = ruBelowEn(answerEn, q.translation_ru);
@@ -79,7 +79,7 @@ export default function Lightning() {
       questionRu,
       answerEn,
       answerRu,
-      fallbackK: q.keyword_hint?.trim() || questionEn,
+      fallbackK: keywordHintOrFallback(q.keyword_hint, questionEn),
       fallbackA: answerEn,
     });
   }

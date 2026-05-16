@@ -15,7 +15,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { Type3Q } from "../types";
-import { ruBelowEn, type3InstructionEn } from "../lib/bilingualLines";
+import { keywordHintOrFallback, ruBelowEn, type3InstructionEn } from "../lib/bilingualLines";
 
 const INST_EN = type3InstructionEn();
 
@@ -149,8 +149,7 @@ export function Type3View({
   const firstW = firstKey ? byKey[firstKey] : undefined;
 
   const useKeywordOnly = promptVariant === "keyword";
-  const keywordOrFallback =
-    q.keyword_hint?.trim() || q.full_sentence || INST_EN;
+  const keywordOrFallback = keywordHintOrFallback(q.keyword_hint, q.full_sentence || INST_EN);
 
   const dense = !!compact;
 

@@ -1,5 +1,5 @@
 import type { Type2Q } from "../types";
-import { ruBelowEn, type2InstructionEn } from "../lib/bilingualLines";
+import { keywordHintOrFallback, ruBelowEn, type2InstructionEn } from "../lib/bilingualLines";
 
 const INST_EN = type2InstructionEn();
 
@@ -33,8 +33,7 @@ export function Type2View({
   const filled = q.terms.every((t) => map[t] >= 0);
 
   const useKeywordOnly = promptVariant === "keyword";
-  const keywordOrFallback =
-    q.keyword_hint?.trim() || q.terms.join(", ") || INST_EN;
+  const keywordOrFallback = keywordHintOrFallback(q.keyword_hint, q.terms.join(", ") || INST_EN);
 
   const dense = !!compact;
 
