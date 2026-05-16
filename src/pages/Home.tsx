@@ -85,7 +85,9 @@ export default function Home() {
             className="rounded-xl border border-slate-300 dark:border-slate-600 p-4 hover:bg-slate-100 dark:hover:bg-slate-800 min-h-touch flex flex-col gap-1"
           >
             <span className="font-semibold">Молниеносный</span>
-            <span className="text-sm text-slate-600 dark:text-slate-400">Ключ → ответ перед входом</span>
+            <span className="text-sm text-slate-600 dark:text-slate-400">
+              Стандартный список или цветная мнемоника перед экзаменом
+            </span>
           </Link>
           <Link
             to="/search"
