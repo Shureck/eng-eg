@@ -8,15 +8,20 @@ export function CardWithActionsRail({
   children,
   actions,
   railClassName,
+  compact,
 }: {
   children: ReactNode;
   actions: ReactNode;
   /** Заменить классы правой колонки (ширина, отступы и т.д.) */
   railClassName?: string;
+  /** Узкие отступы (SRS / мобильный экран) */
+  compact?: boolean;
 }) {
+  const gap = compact ? "gap-2 md:gap-3" : "gap-4 md:gap-6";
+  const innerSpace = compact ? "space-y-2" : "space-y-4";
   return (
-    <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
-      <div className="flex-1 min-w-0 space-y-4">{children}</div>
+    <div className={`flex flex-col md:flex-row md:items-start ${gap}`}>
+      <div className={`flex-1 min-w-0 ${innerSpace}`}>{children}</div>
       <div className={railClassName ?? DEFAULT_RAIL}>{actions}</div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { allKeys, BANK_EN, getQuestion } from "../data/bank";
 import { useQuestionLang } from "../context/QuestionLangContext";
 import { useProgress } from "../hooks/useProgress";
@@ -68,7 +68,7 @@ export default function Weak() {
   const [order3, setOrder3] = useState<string[]>([]);
   const [hint3, setHint3] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setPick(null);
     setReveal(false);
     setHint3(false);

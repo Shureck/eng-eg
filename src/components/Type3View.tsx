@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import {
   DndContext,
   PointerSensor,
@@ -19,16 +19,32 @@ import { ruBelowEn, type3InstructionEn } from "../lib/bilingualLines";
 
 const INST_EN = type3InstructionEn();
 
+/** Порядок из родителя совпадает с ключами текущего вопроса (перестановка без лишних/пропущенных ключей). */
+export function isValidType3Order(order: string[], q: Type3Q): boolean {
+  const expected = q.words.map((w) => w.key);
+  if (order.length !== expected.length) return false;
+  const bag = new Map<string, number>();
+  for (const k of expected) bag.set(k, (bag.get(k) ?? 0) + 1);
+  for (const k of order) {
+    const n = bag.get(k);
+    if (!n) return false;
+    bag.set(k, n - 1);
+  }
+  return [...bag.values()].every((n) => n === 0);
+}
+
 function Row({
   id,
   text,
   ru,
   disabled,
+  compact,
 }: {
   id: string;
   text: string;
   ru: string;
   disabled: boolean;
+  compact?: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
   const style = {
@@ -36,15 +52,18 @@ function Row({
     transition,
   };
   const secondary = ruBelowEn(text, ru);
+  const dense = !!compact;
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="flex gap-2 items-stretch rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-2"
+      className={`flex items-stretch border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 ${
+        dense ? "gap-1.5 rounded-lg p-1.5" : "gap-2 rounded-xl p-2"
+      }`}
     >
       <button
         type="button"
-        className="min-w-[44px] px-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-lg"
+        className={`min-w-[44px] px-2 rounded-lg bg-slate-100 dark:bg-slate-800 ${dense ? "text-base" : "text-lg"}`}
         disabled={disabled}
         aria-label="Потянуть"
         {...attributes}
@@ -52,12 +71,14 @@ function Row({
       >
         ⠿
       </button>
-      <div className="flex-1">
-        <div className="text-base md:text-lg text-slate-900 dark:text-slate-100 font-medium">
+      <div className="flex-1 min-w-0">
+        <div
+          className={`text-slate-900 dark:text-slate-100 font-medium ${dense ? "text-sm md:text-base" : "text-base md:text-lg"}`}
+        >
           <span className="font-bold">{id})</span> {text}
         </div>
         {secondary ? (
-          <div className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">{secondary}</div>
+          <div className={`text-slate-600 dark:text-slate-400 mt-0.5 ${dense ? "text-xs" : "text-sm"}`}>{secondary}</div>
         ) : null}
       </div>
     </div>
@@ -74,6 +95,7 @@ export function Type3View({
   disabled,
   showHint,
   promptVariant = "full",
+  compact,
 }: {
   q: Type3Q;
   order: string[];
@@ -84,32 +106,41 @@ export function Type3View({
   disabled: boolean;
   showHint: boolean;
   promptVariant?: "full" | "keyword";
+  compact?: boolean;
 }) {
   const byKey = useMemo(() => Object.fromEntries(q.words.map((w) => [w.key, w])), [q.words]);
+
+  /** Стабильный начальный порядок для нового q.id; если родитель ещё держит ключи прошлого вопроса — не падаем на первом кадре. */
+  const fallbackOrder = useMemo(() => initialOrder3(q), [q.id]);
+  const displayOrder = isValidType3Order(order, q) ? order : fallbackOrder;
+
+  useLayoutEffect(() => {
+    if (!isValidType3Order(order, q)) setOrder(fallbackOrder);
+  }, [q.id, order, q, fallbackOrder, setOrder]);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
   const onDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
-    const oldIndex = order.indexOf(String(active.id));
-    const newIndex = order.indexOf(String(over.id));
+    const oldIndex = displayOrder.indexOf(String(active.id));
+    const newIndex = displayOrder.indexOf(String(over.id));
     if (oldIndex < 0 || newIndex < 0) return;
-    setOrder(arrayMove(order, oldIndex, newIndex));
+    setOrder(arrayMove(displayOrder, oldIndex, newIndex));
   };
 
-  const sentence = order
+  const sentence = displayOrder
     .map((k) => {
       const w = byKey[k];
       return w ? w.text : "";
     })
     .join(" ");
-  const ok = order.every((k, i) => k === q.correct_order[i]);
+  const ok = displayOrder.every((k, i) => k === q.correct_order[i]);
 
   function move(ix: number, dir: -1 | 1) {
     const j = ix + dir;
-    if (j < 0 || j >= order.length) return;
-    const copy = [...order];
+    if (j < 0 || j >= displayOrder.length) return;
+    const copy = [...displayOrder];
     [copy[ix], copy[j]] = [copy[j], copy[ix]];
     setOrder(copy);
   }
@@ -121,15 +152,25 @@ export function Type3View({
   const keywordOrFallback =
     q.keyword_hint?.trim() || q.full_sentence || INST_EN;
 
+  const dense = !!compact;
+
   return (
-    <div className="space-y-4">
+    <div className={dense ? "space-y-2" : "space-y-4"}>
       {useKeywordOnly ? (
         <>
-          <p className="text-xl leading-snug font-semibold whitespace-pre-wrap text-slate-900 dark:text-slate-100">
+          <p
+            className={`leading-snug font-semibold whitespace-pre-wrap text-slate-900 dark:text-slate-100 ${
+              dense ? "text-lg" : "text-xl"
+            }`}
+          >
             {keywordOrFallback}
           </p>
           {ruBelowEn(keywordOrFallback, q.translation_ru) && (
-            <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 pl-3">
+            <p
+              className={`text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 ${
+                dense ? "text-xs pl-2" : "text-sm pl-3"
+              }`}
+            >
               {ruBelowEn(keywordOrFallback, q.translation_ru)}
             </p>
           )}
@@ -137,30 +178,36 @@ export function Type3View({
         </>
       ) : (
         <>
-          <p className="text-lg md:text-xl font-medium text-slate-900 dark:text-slate-100">{INST_EN}</p>
+          <p className={`font-medium text-slate-900 dark:text-slate-100 ${dense ? "text-base md:text-lg" : "text-lg md:text-xl"}`}>
+            {INST_EN}
+          </p>
           {ruBelowEn(INST_EN, q.translation_ru) && (
-            <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 pl-3">
+            <p
+              className={`text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 ${
+                dense ? "text-xs pl-2" : "text-sm pl-3"
+              }`}
+            >
               {ruBelowEn(INST_EN, q.translation_ru)}
             </p>
           )}
         </>
       )}
       {showHint && !reveal && firstW && (
-        <p className="text-sm rounded-lg bg-amber-500/15 px-3 py-2 space-y-1">
+        <p className={`rounded-lg bg-amber-500/15 space-y-1 ${dense ? "text-xs px-2 py-1.5" : "text-sm px-3 py-2"}`}>
           <span className="block text-slate-600 dark:text-slate-400">Подсказка: первый фрагмент —</span>
-          <strong className="text-base text-slate-900 dark:text-slate-100">{firstW.text}</strong>
+          <strong className={`text-slate-900 dark:text-slate-100 ${dense ? "text-sm" : "text-base"}`}>{firstW.text}</strong>
           {ruBelowEn(firstW.text, firstW.text_ru) && (
             <span className="block text-xs text-slate-600 dark:text-slate-400">{ruBelowEn(firstW.text, firstW.text_ru)}</span>
           )}
         </p>
       )}
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-        <SortableContext items={order} strategy={verticalListSortingStrategy}>
-          <div className="space-y-2">
-            {order.map((key, ix) => (
-              <div key={key} className="flex gap-1 items-center">
-                <div className="flex-1">
-                  <Row id={key} text={byKey[key].text} ru={byKey[key].text_ru} disabled={disabled} />
+        <SortableContext items={displayOrder} strategy={verticalListSortingStrategy}>
+          <div className={dense ? "space-y-1.5" : "space-y-2"}>
+            {displayOrder.map((key, ix) => (
+              <div key={key} className={`flex items-center ${dense ? "gap-0.5" : "gap-1"}`}>
+                <div className="flex-1 min-w-0">
+                  <Row id={key} text={byKey[key]!.text} ru={byKey[key]!.text_ru} disabled={disabled} compact={dense} />
                 </div>
                 <div className="flex flex-col gap-1">
                   <button
@@ -174,7 +221,7 @@ export function Type3View({
                   <button
                     type="button"
                     className="min-h-touch min-w-[44px] rounded border border-slate-300 dark:border-slate-600"
-                    disabled={disabled || ix === order.length - 1}
+                    disabled={disabled || ix === displayOrder.length - 1}
                     onClick={() => move(ix, 1)}
                   >
                     ↓
@@ -186,16 +233,18 @@ export function Type3View({
         </SortableContext>
       </DndContext>
       {reveal && (
-        <div className="rounded-xl bg-slate-100 dark:bg-slate-900 p-4 space-y-2">
-          <p className="font-medium text-lg text-slate-900 dark:text-slate-100">{q.full_sentence}</p>
+        <div className={`rounded-xl bg-slate-100 dark:bg-slate-900 space-y-2 ${dense ? "p-3" : "p-4"}`}>
+          <p className={`font-medium text-slate-900 dark:text-slate-100 ${dense ? "text-base" : "text-lg"}`}>{q.full_sentence}</p>
           {ruBelowEn(q.full_sentence, q.translation_ru) && (
-            <p className="text-sm text-slate-600 dark:text-slate-300">{ruBelowEn(q.full_sentence, q.translation_ru)}</p>
+            <p className={`text-slate-600 dark:text-slate-300 ${dense ? "text-xs" : "text-sm"}`}>
+              {ruBelowEn(q.full_sentence, q.translation_ru)}
+            </p>
           )}
-          <p className="text-sm">{q.explanation_ru}</p>
+          <p className={dense ? "text-xs" : "text-sm"}>{q.explanation_ru}</p>
         </div>
       )}
       {!reveal && (
-        <p className={`text-sm font-medium ${ok ? "text-emerald-600" : "text-slate-500"}`}>
+        <p className={`font-medium ${dense ? "text-xs" : "text-sm"} ${ok ? "text-emerald-600" : "text-slate-500"}`}>
           {ok ? "Порядок верный." : "Проверьте порядок и нажмите «Ответить»."}
         </p>
       )}

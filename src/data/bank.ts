@@ -91,6 +91,12 @@ export function allKeys(bank: QuestionBank = BANK_EN): string[] {
   return k;
 }
 
+/** Ключи одного типа задания (t1 / t2 / t3) из общего списка `t1-3`, … */
+export function keysForTaskKind(allKeysList: string[], kind: "t1" | "t2" | "t3"): string[] {
+  const prefix = `${kind}-`;
+  return allKeysList.filter((k) => k.startsWith(prefix));
+}
+
 /** Порядок «Обучение»: все type1, затем type2, затем type3 */
 export function learnKeyOrder(bank: QuestionBank = BANK_EN): string[] {
   return allKeys(bank);

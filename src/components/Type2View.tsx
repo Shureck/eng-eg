@@ -12,6 +12,7 @@ export function Type2View({
   reveal,
   disabled,
   promptVariant = "full",
+  compact,
 }: {
   q: Type2Q;
   map: Record<string, number>;
@@ -21,6 +22,7 @@ export function Type2View({
   reveal: boolean;
   disabled: boolean;
   promptVariant?: "full" | "keyword";
+  compact?: boolean;
 }) {
   const ok = q.terms.every((t) => {
     const ix = map[t];
@@ -34,15 +36,25 @@ export function Type2View({
   const keywordOrFallback =
     q.keyword_hint?.trim() || q.terms.join(", ") || INST_EN;
 
+  const dense = !!compact;
+
   return (
-    <div className="space-y-4">
+    <div className={dense ? "space-y-2" : "space-y-4"}>
       {useKeywordOnly ? (
         <>
-          <p className="text-xl leading-snug font-semibold whitespace-pre-wrap text-slate-900 dark:text-slate-100">
+          <p
+            className={`leading-snug font-semibold whitespace-pre-wrap text-slate-900 dark:text-slate-100 ${
+              dense ? "text-lg" : "text-xl"
+            }`}
+          >
             {keywordOrFallback}
           </p>
           {ruBelowEn(keywordOrFallback, q.translation_ru) && (
-            <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 pl-3">
+            <p
+              className={`text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 ${
+                dense ? "text-xs pl-2" : "text-sm pl-3"
+              }`}
+            >
               {ruBelowEn(keywordOrFallback, q.translation_ru)}
             </p>
           )}
@@ -50,7 +62,9 @@ export function Type2View({
         </>
       ) : (
         <>
-          <p className="text-lg md:text-xl font-medium text-slate-900 dark:text-slate-100">{INST_EN}</p>
+          <p className={`font-medium text-slate-900 dark:text-slate-100 ${dense ? "text-base md:text-lg" : "text-lg md:text-xl"}`}>
+            {INST_EN}
+          </p>
           {ruBelowEn(INST_EN, q.translation_ru) && (
             <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 pl-3">
               {ruBelowEn(INST_EN, q.translation_ru)}
@@ -58,15 +72,19 @@ export function Type2View({
           )}
         </>
       )}
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-3">
+      <div className={dense ? "grid gap-2 md:grid-cols-2 md:gap-3" : "grid gap-4 md:grid-cols-2"}>
+        <div className={dense ? "space-y-2" : "space-y-3"}>
           {q.terms.map((t, i) => (
             <div key={t}>
-              <div className="font-semibold text-base md:text-lg text-slate-900 dark:text-slate-100">
+              <div
+                className={`font-semibold text-slate-900 dark:text-slate-100 ${dense ? "text-sm md:text-base" : "text-base md:text-lg"}`}
+              >
                 {i + 1}. {t}
               </div>
               {ruBelowEn(t, q.terms_ru[i]) && (
-                <div className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">{ruBelowEn(t, q.terms_ru[i])}</div>
+                <div className={`text-slate-600 dark:text-slate-400 mt-0.5 ${dense ? "text-xs" : "text-sm"}`}>
+                  {ruBelowEn(t, q.terms_ru[i])}
+                </div>
               )}
               <select
                 className="mt-1 w-full min-h-touch rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-2"
@@ -92,14 +110,16 @@ export function Type2View({
             </div>
           ))}
         </div>
-        <div className="text-sm space-y-2 text-slate-700 dark:text-slate-300">
-          <p className="font-medium text-base text-slate-900 dark:text-slate-100">Definitions</p>
-          <ol className="list-decimal pl-5 space-y-3">
+        <div className={`text-slate-700 dark:text-slate-300 ${dense ? "text-xs space-y-1" : "text-sm space-y-2"}`}>
+          <p className={`font-medium text-slate-900 dark:text-slate-100 ${dense ? "text-sm" : "text-base"}`}>Definitions</p>
+          <ol className={`list-decimal pl-5 ${dense ? "space-y-1.5" : "space-y-3"}`}>
             {q.definitions.map((d, ix) => (
               <li key={ix}>
-                <span className="text-base text-slate-900 dark:text-slate-100">{d}</span>
+                <span className={`text-slate-900 dark:text-slate-100 ${dense ? "text-sm" : "text-base"}`}>{d}</span>
                 {ruBelowEn(d, q.definitions_ru[ix]) && (
-                  <span className="block text-sm text-slate-600 dark:text-slate-400 mt-1">{ruBelowEn(d, q.definitions_ru[ix])}</span>
+                  <span className={`block text-slate-600 dark:text-slate-400 ${dense ? "text-xs mt-0.5" : "text-sm mt-1"}`}>
+                    {ruBelowEn(d, q.definitions_ru[ix])}
+                  </span>
                 )}
               </li>
             ))}
@@ -107,7 +127,7 @@ export function Type2View({
         </div>
       </div>
       {reveal && (
-        <div className="rounded-xl bg-slate-100 dark:bg-slate-900 p-4 text-sm space-y-2">
+        <div className={`rounded-xl bg-slate-100 dark:bg-slate-900 space-y-2 ${dense ? "p-3 text-xs" : "p-4 text-sm"}`}>
           <p>{q.explanation_ru}</p>
           <ul className="list-disc pl-5 space-y-2">
             {q.terms.map((t, i) => (

@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuestionLang } from "../context/QuestionLangContext";
 
@@ -8,8 +8,10 @@ const linkCls = ({ isActive }: { isActive: boolean }) =>
   }`;
 
 export default function AppShell() {
+  const { pathname } = useLocation();
   const { questionUiRussian, setQuestionUiRussian } = useQuestionLang();
   const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const mainPy = pathname === "/train" ? "py-3" : "py-6";
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -67,7 +69,7 @@ export default function AppShell() {
           </nav>
         </div>
       </header>
-      <main className="flex-1 max-w-3xl w-full mx-auto px-3 py-6">
+      <main className={`flex-1 max-w-3xl w-full mx-auto px-3 ${mainPy}`}>
         <Outlet />
       </main>
     </div>

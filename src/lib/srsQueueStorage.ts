@@ -1,20 +1,47 @@
 import { allKeys, BANK_EN } from "../data/bank";
 
-export type QueueSessionSnapshot = { queue: string[]; qi: number };
+/** Группа задания для SRS (совпадает с `SrsTaskGroup` в srsTrainPrefs) */
+export type QueueSnapshotTaskGroup = "t1" | "t2" | "t3";
+
+/** Режим очереди SRS (совпадает с `SrsTrainMode`) */
+export type QueueSnapshotTrainMode = "due" | "all" | "problem";
+
+export type QueueSessionSnapshot = {
+  queue: string[];
+  qi: number;
+  /** С какими фильтрами сохранена очередь (нет в старых снимках) */
+  group?: QueueSnapshotTaskGroup;
+  mode?: QueueSnapshotTrainMode;
+};
 
 /** @deprecated используйте QueueSessionSnapshot */
 export type SrsQueueSnapshot = QueueSessionSnapshot;
 
+function isValidGroup(g: unknown): g is QueueSnapshotTaskGroup {
+  return g === "t1" || g === "t2" || g === "t3";
+}
+
+function isValidMode(m: unknown): m is QueueSnapshotTrainMode {
+  return m === "due" || m === "all" || m === "problem";
+}
+
 export function sanitizeQueueSnapshot(raw: unknown): QueueSessionSnapshot | null {
   if (!raw || typeof raw !== "object") return null;
-  const { queue: q, qi } = raw as { queue?: unknown; qi?: unknown };
+  const { queue: q, qi, group: gRaw, mode: mRaw } = raw as {
+    queue?: unknown;
+    qi?: unknown;
+    group?: unknown;
+    mode?: unknown;
+  };
   if (!Array.isArray(q) || q.some((x) => typeof x !== "string")) return null;
   if (typeof qi !== "number" || !Number.isFinite(qi)) return null;
   const valid = new Set(allKeys(BANK_EN));
   const queue = q.filter((k) => valid.has(k));
   if (queue.length === 0) return null;
   const qiClamped = Math.min(Math.max(0, Math.floor(qi)), queue.length - 1);
-  return { queue, qi: qiClamped };
+  const group = isValidGroup(gRaw) ? gRaw : undefined;
+  const mode = isValidMode(mRaw) ? mRaw : undefined;
+  return { queue, qi: qiClamped, ...(group ? { group } : {}), ...(mode ? { mode } : {}) };
 }
 
 /** @deprecated используйте sanitizeQueueSnapshot */

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { pickExamDeck } from "../lib/exam";
 import { Type1View } from "../components/Type1View";
 import { CardWithActionsRail } from "../components/CardWithActionsRail";
@@ -36,7 +36,7 @@ export default function Exam() {
   const [map2, setMap2] = useState<Record<string, number>>({});
   const [order3, setOrder3] = useState<string[]>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setPick(null);
     setRevealed(false);
     if (cur?.kind === "t2") setMap2(emptyMap2(cur.data));

@@ -14,7 +14,13 @@ function routerBasename(): string | undefined {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter basename={routerBasename()}>
+    <BrowserRouter
+      basename={routerBasename()}
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <QuestionLangProvider>
         <App />
       </QuestionLangProvider>
