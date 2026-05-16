@@ -81,7 +81,7 @@ export default function Lightning() {
 
       {displayMode === "standard" ? (
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          Быстрый список «вопрос → ответ». Прокручивайте перед экзаменом.
+          Быстрый список «ключ → ответ». Прокручивайте перед экзаменом. Формулировка и ответ подсвечены отдельно.
         </p>
       ) : (
         <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -90,33 +90,45 @@ export default function Lightning() {
         </p>
       )}
 
-      <ul className="space-y-3 text-sm">
+      <ul className="space-y-3">
         {rows.map((r, i) => (
           <li
             key={r.id}
-            className="rounded-lg border border-slate-200 dark:border-slate-700 p-3 break-words bg-white/50 dark:bg-slate-900/40"
+            className="rounded-xl border border-slate-200/90 dark:border-slate-600/80 p-4 shadow-sm bg-white dark:bg-slate-900/55 backdrop-blur-[2px]"
           >
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-mono mb-1">
-              {i + 1}. <span className="text-slate-400">{r.id}</span>
+            <div className="text-[10px] uppercase tracking-wide text-slate-400 dark:text-slate-500 font-mono mb-2">
+              {i + 1}. <span className="text-slate-400 dark:text-slate-600">{r.id}</span>
             </div>
             {displayMode === "standard" ? (
-              <div className="text-sm leading-relaxed text-slate-800 dark:text-slate-100">
-                <span>{r.standardLeft}</span>
-                <span className="text-slate-400 dark:text-slate-500 mx-1.5">→</span>
-                <span className="text-slate-700 dark:text-slate-200">{r.fallbackA}</span>
-              </div>
+              <StandardLightningRow left={r.standardLeft} answer={r.fallbackA} />
             ) : r.cheat ? (
               <CheatMnemonicLine hook={r.cheat.hook} answerKey={r.cheat.answerKey} />
             ) : (
               <div className="font-mono flex flex-wrap items-baseline gap-2 text-sm">
                 <span className="text-sky-600 dark:text-sky-400">{r.fallbackK}</span>
                 <span className="text-slate-400">→</span>
-                <span>{r.fallbackA}</span>
+                <span className="text-slate-900 dark:text-slate-100">{r.fallbackA}</span>
               </div>
             )}
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function StandardLightningRow({ left, answer }: { left: string; answer: string }) {
+  return (
+    <div className="font-mono text-[13px] sm:text-sm leading-relaxed flex flex-wrap items-baseline gap-x-2 gap-y-2">
+      <mark className="rounded-md px-2 py-1 bg-sky-100 text-sky-900 shadow-sm ring-1 ring-sky-300/60 dark:bg-sky-500/20 dark:text-sky-100 dark:ring-sky-400/25 max-w-full whitespace-pre-wrap break-words">
+        {left}
+      </mark>
+      <span className="text-slate-400 dark:text-slate-500 shrink-0 select-none" aria-hidden>
+        →
+      </span>
+      <mark className="rounded-md px-2 py-1 bg-violet-100 text-violet-950 shadow-sm ring-1 ring-violet-300/50 dark:bg-violet-500/20 dark:text-violet-100 dark:ring-violet-400/25 max-w-full whitespace-pre-wrap break-words">
+        {answer}
+      </mark>
     </div>
   );
 }
