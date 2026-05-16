@@ -5,6 +5,7 @@ import { Type2View, emptyMap2, gradeType2 } from "../components/Type2View";
 import { Type3View, gradeType3, initialOrder3 } from "../components/Type3View";
 import type { AnyQ } from "../types";
 import { useProgress } from "../hooks/useProgress";
+import { defaultProgress } from "../lib/db";
 import { markHard, onWrong } from "../lib/srs";
 
 const SEC = 35 * 60;
@@ -45,8 +46,7 @@ export default function Exam() {
 
   async function registerWrongFor(q: AnyQ) {
     const key = q.kind === "t1" ? `t1-${q.data.id}` : q.kind === "t2" ? `t2-${q.data.id}` : `t3-${q.data.id}`;
-    const row = map.get(key);
-    if (!row) return;
+    const row = map.get(key) ?? defaultProgress(key);
     await save(onWrong(row, Date.now()));
   }
 
@@ -127,8 +127,8 @@ export default function Exam() {
               if (results[ix]) continue;
               const q = deck[ix];
               const key = q.kind === "t1" ? `t1-${q.data.id}` : q.kind === "t2" ? `t2-${q.data.id}` : `t3-${q.data.id}`;
-              const row = map.get(key);
-              if (row) await save(markHard({ ...row, qid: key }));
+              const row = map.get(key) ?? defaultProgress(key);
+              await save(markHard({ ...row, qid: key }));
             }
             alert("Ошибочные отмечены как «сложные».");
           }}
@@ -148,7 +148,7 @@ export default function Exam() {
         </div>
       </div>
       <p className="text-sm text-slate-500">
-        Вопрос {i + 1} / {deck.length} · без переводов
+        Вопрос {i + 1} / {deck.length} · без переводов · ошибки попадают в «Слабые места»
       </p>
 
       {cur?.kind === "t1" && (

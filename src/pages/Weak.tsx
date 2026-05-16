@@ -11,7 +11,7 @@ import {
 import { Type1View } from "../components/Type1View";
 import { Type2View, emptyMap2, gradeType2 } from "../components/Type2View";
 import { Type3View, gradeType3, initialOrder3 } from "../components/Type3View";
-import { isDue, onCorrect, onWrong } from "../lib/srs";
+import { isDue, onCorrectWeak, onWrong } from "../lib/srs";
 import { shuffle } from "../lib/shuffle";
 
 export default function Weak() {
@@ -75,7 +75,17 @@ export default function Weak() {
     if (!key) return;
     const row = map.get(key) ?? defaultProgress(key);
     const now = Date.now();
-    await save(correct ? onCorrect(row, now) : onWrong(row, now));
+    await save(correct ? onCorrectWeak(row, now) : onWrong(row, now));
+
+    if (correct) {
+      const newQueue = queue.filter((k) => k !== key);
+      const newQi = Math.min(qi, Math.max(0, newQueue.length - 1));
+      setQueue(newQueue);
+      setQi(newQi);
+      if (newQueue.length === 0) rebuild();
+      return;
+    }
+
     if (qi + 1 >= queue.length) rebuild();
     else setQi((x) => x + 1);
   }

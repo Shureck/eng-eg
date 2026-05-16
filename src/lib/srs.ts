@@ -44,6 +44,15 @@ export function markHard(row: ProgressRow): ProgressRow {
   return { ...row, hardFlag: true };
 }
 
+/** Верный ответ в режиме «Слабые места»: SRS + карточка больше не считается слабой */
+export function onCorrectWeak(row: ProgressRow, now: number): ProgressRow {
+  return {
+    ...onCorrect(row, now),
+    hardFlag: false,
+    wrongEver: false,
+  };
+}
+
 export function boxStats(rows: (ProgressRow | undefined)[]): Record<number, number> {
   const c: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
   for (const r of rows) {
