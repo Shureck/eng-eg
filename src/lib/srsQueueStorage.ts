@@ -1,10 +1,11 @@
 import { allKeys, BANK_EN } from "../data/bank";
 
-export const SRS_QUEUE_LS_KEY = "angl-en-srs-queue-v1";
+export type QueueSessionSnapshot = { queue: string[]; qi: number };
 
-export type SrsQueueSnapshot = { queue: string[]; qi: number };
+/** @deprecated используйте QueueSessionSnapshot */
+export type SrsQueueSnapshot = QueueSessionSnapshot;
 
-export function sanitizeSrsSnapshot(raw: unknown): SrsQueueSnapshot | null {
+export function sanitizeQueueSnapshot(raw: unknown): QueueSessionSnapshot | null {
   if (!raw || typeof raw !== "object") return null;
   const { queue: q, qi } = raw as { queue?: unknown; qi?: unknown };
   if (!Array.isArray(q) || q.some((x) => typeof x !== "string")) return null;
@@ -16,28 +17,64 @@ export function sanitizeSrsSnapshot(raw: unknown): SrsQueueSnapshot | null {
   return { queue, qi: qiClamped };
 }
 
-export function loadSrsQueueSnapshot(): SrsQueueSnapshot | null {
-  try {
-    const raw = localStorage.getItem(SRS_QUEUE_LS_KEY);
-    if (!raw) return null;
-    return sanitizeSrsSnapshot(JSON.parse(raw));
-  } catch {
-    return null;
-  }
+/** @deprecated используйте sanitizeQueueSnapshot */
+export const sanitizeSrsSnapshot = sanitizeQueueSnapshot;
+
+function createQueueStorage(lsKey: string) {
+  return {
+    lsKey,
+    load(): QueueSessionSnapshot | null {
+      try {
+        const raw = localStorage.getItem(lsKey);
+        if (!raw) return null;
+        return sanitizeQueueSnapshot(JSON.parse(raw));
+      } catch {
+        return null;
+      }
+    },
+    save(s: QueueSessionSnapshot): void {
+      try {
+        localStorage.setItem(lsKey, JSON.stringify(s));
+      } catch {
+        /* ignore */
+      }
+    },
+    clear(): void {
+      try {
+        localStorage.removeItem(lsKey);
+      } catch {
+        /* ignore */
+      }
+    },
+  };
 }
 
-export function saveSrsQueueSnapshot(s: SrsQueueSnapshot): void {
-  try {
-    localStorage.setItem(SRS_QUEUE_LS_KEY, JSON.stringify(s));
-  } catch {
-    /* ignore quota / private mode */
-  }
+export const SRS_QUEUE_LS_KEY = "angl-en-srs-queue-v1";
+export const WEAK_QUEUE_LS_KEY = "angl-en-weak-queue-v1";
+
+export const srsQueueStorage = createQueueStorage(SRS_QUEUE_LS_KEY);
+export const weakQueueStorage = createQueueStorage(WEAK_QUEUE_LS_KEY);
+
+export function loadSrsQueueSnapshot(): QueueSessionSnapshot | null {
+  return srsQueueStorage.load();
+}
+
+export function saveSrsQueueSnapshot(s: QueueSessionSnapshot): void {
+  srsQueueStorage.save(s);
 }
 
 export function clearSrsQueueSnapshot(): void {
-  try {
-    localStorage.removeItem(SRS_QUEUE_LS_KEY);
-  } catch {
-    /* ignore */
-  }
+  srsQueueStorage.clear();
+}
+
+export function loadWeakQueueSnapshot(): QueueSessionSnapshot | null {
+  return weakQueueStorage.load();
+}
+
+export function saveWeakQueueSnapshot(s: QueueSessionSnapshot): void {
+  weakQueueStorage.save(s);
+}
+
+export function clearWeakQueueSnapshot(): void {
+  weakQueueStorage.clear();
 }

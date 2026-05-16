@@ -3,6 +3,11 @@ import { allKeys, BANK_EN, getQuestion } from "../data/bank";
 import { useQuestionLang } from "../context/QuestionLangContext";
 import { useProgress } from "../hooks/useProgress";
 import { defaultProgress } from "../lib/db";
+import {
+  clearWeakQueueSnapshot,
+  loadWeakQueueSnapshot,
+  saveWeakQueueSnapshot,
+} from "../lib/srsQueueStorage";
 import { Type1View } from "../components/Type1View";
 import { Type2View, emptyMap2, gradeType2 } from "../components/Type2View";
 import { Type3View, gradeType3, initialOrder3 } from "../components/Type3View";
@@ -14,6 +19,7 @@ export default function Weak() {
   const { map, ready, save } = useProgress();
   const [queue, setQueue] = useState<string[]>([]);
   const [qi, setQi] = useState(0);
+  const [weakBootstrapped, setWeakBootstrapped] = useState(false);
 
   const rebuild = useCallback(() => {
     const now = Date.now();
@@ -28,8 +34,25 @@ export default function Weak() {
   }, [map]);
 
   useEffect(() => {
-    if (ready && queue.length === 0) rebuild();
-  }, [ready, queue.length, rebuild]);
+    if (!ready || weakBootstrapped) return;
+    const snap = loadWeakQueueSnapshot();
+    if (snap) {
+      setQueue(snap.queue);
+      setQi(snap.qi);
+    } else {
+      rebuild();
+    }
+    setWeakBootstrapped(true);
+  }, [ready, weakBootstrapped, rebuild]);
+
+  useEffect(() => {
+    if (!ready || !weakBootstrapped) return;
+    if (queue.length === 0) {
+      clearWeakQueueSnapshot();
+      return;
+    }
+    saveWeakQueueSnapshot({ queue, qi });
+  }, [ready, weakBootstrapped, queue, qi]);
 
   const key = queue[qi];
   const aq = useMemo(() => (key ? getQuestion(key, bank) : null), [key, bank]);

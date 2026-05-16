@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { learnKeyOrder, getQuestion } from "../data/bank";
 import { useQuestionLang } from "../context/QuestionLangContext";
 import { useProgress } from "../hooks/useProgress";
+import { loadLearnIndexRaw, saveLearnIndex } from "../lib/learnProgress";
 import { defaultProgress } from "../lib/db";
 import { Type1View } from "../components/Type1View";
 import { Type2View, correctMap2 } from "../components/Type2View";
@@ -12,10 +13,29 @@ export default function Learn() {
   const { bank, questionUiRussian } = useQuestionLang();
   const keys = learnKeyOrder(bank);
   const [idx, setIdx] = useState(0);
+  const [learnBootstrapped, setLearnBootstrapped] = useState(false);
   const { map, ready, save } = useProgress();
-  const key = keys[idx];
+  const effectiveIdx = keys.length === 0 ? 0 : Math.min(idx, keys.length - 1);
+  const key = keys.length === 0 ? undefined : keys[effectiveIdx];
   const aq = key ? getQuestion(key, bank) : null;
   const row = key ? map.get(key) ?? defaultProgress(key) : null;
+
+  useEffect(() => {
+    if (!ready || keys.length === 0 || learnBootstrapped) return;
+    const stored = loadLearnIndexRaw();
+    setIdx(Math.min(Math.max(0, stored), keys.length - 1));
+    setLearnBootstrapped(true);
+  }, [ready, keys.length, learnBootstrapped]);
+
+  useEffect(() => {
+    if (!ready || keys.length === 0 || !learnBootstrapped) return;
+    setIdx((i) => Math.min(i, keys.length - 1));
+  }, [ready, keys.length, learnBootstrapped]);
+
+  useEffect(() => {
+    if (!ready || keys.length === 0 || !learnBootstrapped) return;
+    saveLearnIndex(Math.min(idx, keys.length - 1));
+  }, [ready, keys.length, idx, learnBootstrapped]);
 
   if (!ready) return <p className="text-slate-500">Загрузка…</p>;
 
@@ -43,13 +63,13 @@ export default function Learn() {
       <div className="flex justify-between items-center gap-2 flex-wrap">
         <h1 className="text-xl font-bold">Обучение</h1>
         <span className="text-sm text-slate-500">
-          {idx + 1} / {keys.length}
+          {effectiveIdx + 1} / {keys.length}
         </span>
       </div>
       <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
         <div
           className="h-full bg-sky-500 transition-all"
-          style={{ width: `${((idx + 1) / keys.length) * 100}%` }}
+          style={{ width: `${((effectiveIdx + 1) / keys.length) * 100}%` }}
         />
       </div>
 
