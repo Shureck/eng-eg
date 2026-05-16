@@ -5434,14 +5434,14 @@
         "Differentiation"
       ],
       "definitions": [
-        "the process of разные множества. calculating a function that represents the rate of change of one variable with respect to another",
+        "the process of calculating a function that represents the rate of change of one variable with respect to another",
         "the quality or state of being dissimilar",
         "the strategy of spreading money across different types of assets"
       ],
       "correct": {
         "Difference": "the quality or state of being dissimilar",
         "Diversification": "the strategy of spreading money across different types of assets",
-        "Differentiation": "the process of разные множества. calculating a function that represents the rate of change of one variable with respect to another"
+        "Differentiation": "the process of calculating a function that represents the rate of change of one variable with respect to another"
       },
       "tags": [
         "general"
@@ -5452,7 +5452,7 @@
         "Differentiation"
       ],
       "definitions_ru": [
-        "the process of разные множества. calculating a function that represents the rate of change of one variable with respect to another",
+        "the process of calculating a function that represents the rate of change of one variable with respect to another",
         "the quality or state of being dissimilar",
         "the strategy of spreading money across different types of assets"
       ],
@@ -5876,12 +5876,12 @@
         "Presumption"
       ],
       "definitions": [
-        "a concept in economics that involves the trad ing, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
+        "a concept in economics that involves the trading, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
         "a term used to describe a conclusion that is made based on incomplete or insufficient information",
         "research method that uses numbers as its basis for making generalizations about a phenomenon"
       ],
       "correct": {
-        "Economic speculations": "a concept in economics that involves the trad ing, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
+        "Economic speculations": "a concept in economics that involves the trading, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
         "Quantitative method": "research method that uses numbers as its basis for making generalizations about a phenomenon",
         "Presumption": "a term used to describe a conclusion that is made based on incomplete or insufficient information"
       },
@@ -5894,7 +5894,7 @@
         "Presumption"
       ],
       "definitions_ru": [
-        "a concept in economics that involves the trad ing, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
+        "a concept in economics that involves the trading, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
         "a term used to describe a conclusion that is made based on incomplete or insufficient information",
         "research method that uses numbers as its basis for making generalizations about a phenomenon"
       ],
@@ -6252,11 +6252,11 @@
       ],
       "definitions": [
         "a deliberate and systematic move toward more relevance and value for customers, and as a result growth of your organization",
-        "he analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
+        "the analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
         "are constraints which hold true unless contradicted by another constraint"
       ],
       "correct": {
-        "Competitive landscape": "he analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
+        "Competitive landscape": "the analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
         "Soft constraints": "are constraints which hold true unless contradicted by another constraint",
         "Shifting business model": "a deliberate and systematic move toward more relevance and value for customers, and as a result growth of your organization"
       },
@@ -6270,7 +6270,7 @@
       ],
       "definitions_ru": [
         "a deliberate and systematic move toward more relevance and value for customers, and as a result growth of your organization",
-        "he analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
+        "the analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
         "are constraints which hold true unless contradicted by another constraint"
       ],
       "translation_ru": "Сопоставьте термины и определения (англ. текст ниже).",

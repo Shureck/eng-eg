@@ -1055,7 +1055,7 @@
     },
     {
       "id": 30,
-      "question": "Fill in the gap with the most appropriate word combination. In economic analysis",
+      "question": "Fill in the gap with the most appropriate word combination. In economic analysis optimization __________",
       "options": [
         {
           "key": "A",
@@ -1067,7 +1067,7 @@
         },
         {
           "key": "C",
-          "text": "calculates the equilibrium optimization __________ price in a market"
+          "text": "calculates the equilibrium price in a market"
         },
         {
           "key": "D",
@@ -1079,15 +1079,15 @@
       "tags": [
         "microeconomics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination. In economic analysis",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. В экономическом анализе оптимизация __________",
       "options_ru": [
-        "helps to find the best possible outcome given constraints",
-        "measures the average utility of consumers",
-        "calculates the equilibrium optimization __________ price in a market",
-        "determines the total value of a variable"
+        "способствует нахождению наилучшего возможного результата при заданных ограничениях",
+        "измеряет среднюю полезность потребителей",
+        "рассчитывает равновесную цену на рынке",
+        "определяет суммарное значение переменной"
       ],
-      "explanation_ru": "Верный ответ — вариант A: «helps to find the best possible outcome given constraints». Запомните формулировку из банка.",
-      "keyword_hint": "In economic analysis"
+      "explanation_ru": "Верный ответ — вариант A: «способствует нахождению наилучшего возможного результата при заданных ограничениях». Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "In economic analysis optimization"
     },
     {
       "id": 31,
@@ -1271,7 +1271,7 @@
     },
     {
       "id": 36,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. A ____________ is an association of two or more people in order to run a business.",
       "options": [
         {
           "key": "A",
@@ -1287,7 +1287,7 @@
         },
         {
           "key": "D",
-          "text": "(вариант отсутствует в PDF)"
+          "text": "Limited liability company"
         }
       ],
       "correct": "C",
@@ -1296,15 +1296,15 @@
         "business",
         "finance"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. ____________ — это объединение двух или более лиц для ведения бизнеса.",
       "options_ru": [
-        "Joint-stock company",
-        "Partnership",
-        "Subsidiary company",
-        "(вариант отсутствует в PDF)"
+        "Акционерное общество",
+        "Партнёрство / товарищество",
+        "Дочерняя компания",
+        "Общество с ограниченной ответственностью"
       ],
-      "explanation_ru": "Верный ответ — вариант C: «Subsidiary company». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант C: «Дочерняя компания» (Subsidiary company) Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "association of two or more people run a business"
     },
     {
       "id": 37,
@@ -1488,7 +1488,7 @@
     },
     {
       "id": 42,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. The concept of elasticity measures the __________",
       "options": [
         {
           "key": "A",
@@ -1496,7 +1496,7 @@
         },
         {
           "key": "B",
-          "text": "Change in quantity demanded The concept of elasticity measures the __________ relative to the change in price"
+          "text": "Change in quantity demanded relative to the change in price"
         },
         {
           "key": "C",
@@ -1512,15 +1512,15 @@
       "tags": [
         "microeconomics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Понятие эластичности измеряет __________",
       "options_ru": [
-        "Change in price relative to the change in quantity demanded",
-        "Change in quantity demanded The concept of elasticity measures the __________ relative to the change in price",
-        "Change in quantity demanded relative to the change in income",
-        "Change in income relative to the change in quantity demanded"
+        "изменение цены относительно изменения объёма спроса",
+        "изменение объёма спроса относительно изменения цены",
+        "изменение объёма спроса относительно изменения дохода",
+        "изменение дохода относительно изменения объёма спроса"
       ],
-      "explanation_ru": "Верный ответ — вариант A: «Change in price relative to the change in quantity demanded». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант A (формулировка из PDF): изменение цены относительно изменения количества спроса Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "The concept of elasticity measures"
     },
     {
       "id": 43,
@@ -1705,7 +1705,7 @@
     },
     {
       "id": 48,
-      "question": "Fill in the gap with the most appropriate word combination. _____________ is NOT a characteristic of a",
+      "question": "Fill in the gap with the most appropriate word combination. _____________ is NOT a characteristic of a perfectly competitive market?",
       "options": [
         {
           "key": "A",
@@ -1729,15 +1729,15 @@
       "tags": [
         "general"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination. _____________ is NOT a characteristic of a",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. _____________ НЕ является признаком совершенной конкуренции?",
       "options_ru": [
-        "Many buyers and sellers",
-        "Homogeneous products",
-        "High barriers to entry",
-        "Perfect information"
+        "Много покупателей и продавцов",
+        "Однородные товары",
+        "Высокие барьеры входа",
+        "Идеальная (совершенная) информация"
       ],
-      "explanation_ru": "Верный ответ — вариант C: «High barriers to entry». Запомните формулировку из банка.",
-      "keyword_hint": "_____________ is NOT a characteristic of a"
+      "explanation_ru": "Верный ответ — вариант C: «Высокие барьеры входа» не свойственны совершенной конкуренции Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "NOT a characteristic perfectly competitive market"
     },
     {
       "id": 49,
@@ -1921,7 +1921,7 @@
     },
     {
       "id": 54,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. Data collection is important in economic research because companies are to _______",
       "options": [
         {
           "key": "A",
@@ -1929,7 +1929,7 @@
         },
         {
           "key": "B",
-          "text": "Measure economic variables accurately and gather empirical data Data collection is important in economic research because companies are to _______"
+          "text": "Measure economic variables accurately and gather empirical data"
         },
         {
           "key": "C",
@@ -1945,15 +1945,15 @@
       "tags": [
         "general"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Сбор данных важен в экономических исследованиях, потому что компании должны _______",
       "options_ru": [
-        "Simplify economic concepts",
-        "Measure economic variables accurately and gather empirical data Data collection is important in economic research because companies are to _______",
-        "Visualize economic models",
-        "Predict future economic trends"
+        "упрощать экономические концепции",
+        "точно измерять экономические переменные и собирать эмпирические данные",
+        "визуализировать экономические модели",
+        "прогнозировать будущие экономические тенденции"
       ],
-      "explanation_ru": "Верный ответ — вариант B: «Measure economic variables accurately and gather empirical data Data collection is important in economic research because companies are to _______». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант B: точное измерение переменных и сбор эмпирических данных Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "Data collection economic research companies"
     },
     {
       "id": 55,
@@ -2137,11 +2137,11 @@
     },
     {
       "id": 60,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. The game theory models contribute to economic analysis ___________",
       "options": [
         {
           "key": "A",
-          "text": "By analyzing consumer behavior combination. The game theory models contribute to economic analysis ___________"
+          "text": "By analyzing consumer behavior"
         },
         {
           "key": "B",
@@ -2153,7 +2153,7 @@
         },
         {
           "key": "D",
-          "text": "By visualizing economic data РД-3"
+          "text": "By visualizing economic data"
         }
       ],
       "correct": "B",
@@ -2161,15 +2161,15 @@
       "tags": [
         "probability"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Модели теории игр вносят вклад в экономический анализ ___________",
       "options_ru": [
-        "By analyzing consumer behavior combination. The game theory models contribute to economic analysis ___________",
-        "By analyzing strategic interactions and decision-making among rational individuals",
-        "By predicting economic trends",
-        "By visualizing economic data РД-3"
+        "анализируя поведение потребителей",
+        "анализируя стратегическое взаимодействие и принятие решений рациональными индивидами",
+        "прогнозируя экономические тренды",
+        "визуализируя экономические данные"
       ],
-      "explanation_ru": "Верный ответ — вариант B: «By analyzing strategic interactions and decision-making among rational individuals». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант B: стратегические взаимодействия и решения рациональных агентов Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "game theory models contribute economic analysis"
     },
     {
       "id": 61,
@@ -2353,11 +2353,11 @@
     },
     {
       "id": 66,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. The primary objective of monetary policy is ____________",
       "options": [
         {
           "key": "A",
-          "text": "To stimulate economic growth by reducing government combination. The primary objective of monetary policy is ____________ intervention"
+          "text": "To stimulate economic growth by reducing government intervention"
         },
         {
           "key": "B",
@@ -2369,7 +2369,7 @@
         },
         {
           "key": "D",
-          "text": "To regulate international trade РД-3"
+          "text": "To regulate international trade"
         }
       ],
       "correct": "B",
@@ -2378,15 +2378,15 @@
         "macroeconomics",
         "microeconomics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Основная цель денежно-кредитной политики — ____________",
       "options_ru": [
-        "To stimulate economic growth by reducing government combination. The primary objective of monetary policy is ____________ intervention",
-        "To reduce inflation and stabilize prices",
-        "To increase government spending and boost demand",
-        "To regulate international trade РД-3"
+        "стимулировать экономический рост за счёт сокращения вмешательства государства",
+        "снижать инфляцию и стабилизировать цены",
+        "увеличивать государственные расходы и стимулировать спрос",
+        "регулировать международную торговлю"
       ],
-      "explanation_ru": "Верный ответ — вариант B: «To reduce inflation and stabilize prices». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант B: снижение инфляции и стабилизация цен Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "primary objective monetary policy"
     },
     {
       "id": 67,
@@ -2570,11 +2570,11 @@
     },
     {
       "id": 72,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. The concept of elasticity measure in economics means ____________",
       "options": [
         {
           "key": "A",
-          "text": "The responsiveness of most appropriate word combination. The concept of elasticity measure in economics means ____________ quantity demanded to changes in price"
+          "text": "The responsiveness of quantity demanded to changes in price"
         },
         {
           "key": "B",
@@ -2594,15 +2594,15 @@
       "tags": [
         "microeconomics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Понятие меры эластичности в экономике означает ____________",
       "options_ru": [
-        "The responsiveness of most appropriate word combination. The concept of elasticity measure in economics means ____________ quantity demanded to changes in price",
-        "The proportion of income spent on a good",
-        "The total revenue generated by selling a good",
-        "The degree of competition in a market"
+        "реакцию объёма спроса на изменения цены",
+        "долю дохода, потраченную на благо",
+        "совокупную выручку от продажи блага",
+        "степень конкуренции на рынке"
       ],
-      "explanation_ru": "Верный ответ — вариант A: «The responsiveness of most appropriate word combination. The concept of elasticity measure in economics means ____________ quantity demanded to changes in price». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант A: чувствительность спроса к изменению цены Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "elasticity measure in economics means"
     },
     {
       "id": 73,
@@ -2750,7 +2750,7 @@
     },
     {
       "id": 77,
-      "question": "Fill in the gap with the most appropriate word combination. The primary objective of a Lorenz curve in",
+      "question": "Fill in the gap with the most appropriate word combination. The primary objective of a Lorenz curve in economics is __________",
       "options": [
         {
           "key": "A",
@@ -2762,7 +2762,7 @@
         },
         {
           "key": "C",
-          "text": "To predict future economic trends economics is __________"
+          "text": "To predict future economic trends"
         },
         {
           "key": "D",
@@ -2774,15 +2774,15 @@
       "tags": [
         "general"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination. The primary objective of a Lorenz curve in",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Основная цель кривой Лоренца в экономике — __________",
       "options_ru": [
-        "To measure income inequality within a population",
-        "To visualize the production possibilities of an economy",
-        "To predict future economic trends economics is __________",
-        "To estimate consumer preferences"
+        "измерять неравенство доходов внутри населения",
+        "наглядно показывать производственные возможности экономики",
+        "прогнозировать будущие экономические тенденции",
+        "оценивать потребительские предпочтения"
       ],
-      "explanation_ru": "Верный ответ — вариант A: «To measure income inequality within a population». Запомните формулировку из банка.",
-      "keyword_hint": "The primary objective of a Lorenz curve in"
+      "explanation_ru": "Верный ответ — вариант A: измерение неравенства доходов Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "Lorenz curve primary objective"
     },
     {
       "id": 78,
@@ -2968,7 +2968,7 @@
     },
     {
       "id": 83,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. The term \"elasticity\" refers to _____________",
       "options": [
         {
           "key": "A",
@@ -2976,7 +2976,7 @@
         },
         {
           "key": "B",
-          "text": "The total revenue generated The term \"elasticity\" refers to _____________ by selling a good"
+          "text": "The total revenue generated by selling a good"
         },
         {
           "key": "C",
@@ -2993,15 +2993,15 @@
         "macroeconomics",
         "microeconomics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Термин «эластичность» относится к _____________",
       "options_ru": [
-        "The measure of responsiveness of quantity demanded to changes in price",
-        "The total revenue generated The term \"elasticity\" refers to _____________ by selling a good",
-        "The average rate of change in GDP over time",
-        "The ratio of government debt to GDP"
+        "мере реакции объёма спроса на изменения цены",
+        "совокупной выручке от продажи блага",
+        "средней скорости изменения ВВП во времени",
+        "отношению государственного долга к ВВП"
       ],
-      "explanation_ru": "Верный ответ — вариант A: «The measure of responsiveness of quantity demanded to changes in price». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант A: отзывчивость спроса к изменению цены Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "The term elasticity refers to"
     },
     {
       "id": 84,
@@ -3802,7 +3802,7 @@
     },
     {
       "id": 106,
-      "question": "Fill in the gap with the most appropriate word combination. The primary function of the Gross Domestic",
+      "question": "Fill in the gap with the most appropriate word combination. The primary function of the Gross Domestic Product (GDP) is ___________",
       "options": [
         {
           "key": "A",
@@ -3814,7 +3814,7 @@
         },
         {
           "key": "C",
-          "text": "To estimate international trade Product (GDP) is ___________ balances"
+          "text": "To estimate international trade balances"
         },
         {
           "key": "D",
@@ -3826,15 +3826,15 @@
       "tags": [
         "macroeconomics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination. The primary function of the Gross Domestic",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Основная функция валового внутреннего продукта (ВВП) — ___________",
       "options_ru": [
-        "To measure changes in the prices of consumer goods and services over time",
-        "To calculate the total output of an economy",
-        "To estimate international trade Product (GDP) is ___________ balances",
-        "To predict future economic trends"
+        "измерять изменения цен на потребительские товары и услуги во времени",
+        "исчислять суммарный выпуск экономики",
+        "оценивать сальдо международной торговли",
+        "прогнозировать будущие экономические тенденции"
       ],
-      "explanation_ru": "Верный ответ — вариант B: «To calculate the total output of an economy». Запомните формулировку из банка.",
-      "keyword_hint": "The primary function of the Gross Domestic"
+      "explanation_ru": "Верный ответ — вариант B: расчёт суммарного выпуска экономики Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "primary function GDP"
     },
     {
       "id": 107,
@@ -4018,11 +4018,11 @@
     },
     {
       "id": 112,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. The concept of equilibrium contributes to economic analysis ________________",
       "options": [
         {
           "key": "A",
-          "text": "By predicting historical most appropriate word combination. The concept of equilibrium contributes to economic analysis ________________ economic trends"
+          "text": "By predicting historical economic trends"
         },
         {
           "key": "B",
@@ -4042,15 +4042,15 @@
       "tags": [
         "microeconomics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Понятие равновесия способствует экономическому анализу ________________",
       "options_ru": [
-        "By predicting historical most appropriate word combination. The concept of equilibrium contributes to economic analysis ________________ economic trends",
-        "By identifying the point where supply equals demand in a market",
-        "By analyzing consumer preferences",
-        "By visualizing economic data"
+        "прогнозируя исторические экономические тенденции",
+        "выявляя точку, в которой предложение равно спросу на рынке",
+        "анализируя потребительские предпочтения",
+        "визуализируя экономические данные"
       ],
-      "explanation_ru": "Верный ответ — вариант B: «By identifying the point where supply equals demand in a market». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант B: точка равенства спроса и предложения Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "equilibrium contributes economic analysis"
     },
     {
       "id": 113,
@@ -4199,7 +4199,7 @@
     },
     {
       "id": 117,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. The process of finding the maximum or minimum value of a function subject to constraints is ________",
       "options": [
         {
           "key": "A",
@@ -4211,7 +4211,7 @@
         },
         {
           "key": "C",
-          "text": "Implementation The process of finding the maximum or minimum value of a function subject to constraints is ________"
+          "text": "Implementation"
         },
         {
           "key": "D",
@@ -4223,15 +4223,15 @@
       "tags": [
         "general"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Процесс нахождения максимума или минимума функции при ограничениях — это ________",
       "options_ru": [
-        "Registration",
-        "Regulation",
-        "Implementation The process of finding the maximum or minimum value of a function subject to constraints is ________",
-        "Optimization"
+        "регистрация",
+        "регулирование",
+        "реализация / внедрение",
+        "оптимизация"
       ],
-      "explanation_ru": "Верный ответ — вариант D: «Optimization». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант D: оптимизация Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "maximum minimum function constraints"
     },
     {
       "id": 118,
@@ -4379,7 +4379,7 @@
     },
     {
       "id": 122,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. A statistical method used to test the validity of a claim or hypothesis about a population parameter is ______________",
       "options": [
         {
           "key": "A",
@@ -4387,7 +4387,7 @@
         },
         {
           "key": "B",
-          "text": "Result Testing combination. A statistical method used to test the validity of a claim or hypothesis about a population parameter is ______________"
+          "text": "Result Testing"
         },
         {
           "key": "C",
@@ -4395,7 +4395,7 @@
         },
         {
           "key": "D",
-          "text": "Group Testing РД-3"
+          "text": "Group Testing"
         }
       ],
       "correct": "C",
@@ -4403,15 +4403,15 @@
       "tags": [
         "statistics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Статистический метод проверки утверждения или гипотезы о параметре генеральной совокупности — это ______________",
       "options_ru": [
-        "Target Testing",
-        "Result Testing combination. A statistical method used to test the validity of a claim or hypothesis about a population parameter is ______________",
-        "Hypothesis Testing",
-        "Group Testing РД-3"
+        "целевое тестирование",
+        "результативное тестирование",
+        "проверка гипотез",
+        "групповое тестирование"
       ],
-      "explanation_ru": "Верный ответ — вариант C: «Hypothesis Testing». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант C: проверка гипотез (Hypothesis Testing) Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "statistical method hypothesis population parameter"
     },
     {
       "id": 123,
@@ -4703,7 +4703,7 @@
     },
     {
       "id": 131,
-      "question": "Fill in the gap with the most appropriate word combination. _________ is a comprehensive and structured approach to gathering and summarizing evidence related to a specific",
+      "question": "Fill in the gap with the most appropriate word combination. _________ is a comprehensive and structured approach to gathering and summarizing evidence related to a specific research question in economics.",
       "options": [
         {
           "key": "A",
@@ -4727,15 +4727,15 @@
       "tags": [
         "general"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination. _________ is a comprehensive and structured approach to gathering and summarizing evidence related to a specific",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. ___________ — это всесторонний структурированный подход к сбору и обобщению доказательств по конкретному исследовательскому вопросу в экономике.",
       "options_ru": [
-        "Systematic Review",
-        "Publication Bias",
-        "Meta-Analysis",
-        "Selection Bias"
+        "Систематический обзор",
+        "Публикационная предвзятость",
+        "Метаанализ",
+        "Смещение выборки"
       ],
-      "explanation_ru": "Верный ответ — вариант A: «Systematic Review». Запомните формулировку из банка.",
-      "keyword_hint": "_________ is a comprehensive and structured approach to gathering and summarizin…"
+      "explanation_ru": "Верный ответ — вариант A: систематический обзор (Systematic Review) Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "systematic review research question economics"
     },
     {
       "id": 132,
@@ -4884,7 +4884,7 @@
     },
     {
       "id": 136,
-      "question": "Fill in the gap with the most appropriate word combination.",
+      "question": "Fill in the gap with the most appropriate word combination. ____________ is a graphical representation of the possible decisions and their outcomes in a sequential manner.",
       "options": [
         {
           "key": "A",
@@ -4896,7 +4896,7 @@
         },
         {
           "key": "C",
-          "text": "Budget impact analysis ____________is a graphical representation of the possible decisions and their outcomes in a sequential manner."
+          "text": "Budget impact analysis"
         },
         {
           "key": "D",
@@ -4908,15 +4908,15 @@
       "tags": [
         "general"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination.",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. ____________ — это графическое представление возможных решений и их последствий в последовательном порядке.",
       "options_ru": [
-        "Decision tree model",
-        "Markov model",
-        "Budget impact analysis ____________is a graphical representation of the possible decisions and their outcomes in a sequential manner.",
-        "Tobit model"
+        "Модель дерева решений",
+        "Марковская модель",
+        "Анализ влияния на бюджет",
+        "Модель Тобита"
       ],
-      "explanation_ru": "Верный ответ — вариант A: «Decision tree model». Запомните формулировку из банка.",
-      "keyword_hint": ""
+      "explanation_ru": "Верный ответ — вариант A: модель дерева решений Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "graphical decisions outcomes sequential"
     },
     {
       "id": 137,
@@ -5065,7 +5065,7 @@
     },
     {
       "id": 141,
-      "question": "Fill in the gap with the most appropriate word combination. One of the instruments of",
+      "question": "Fill in the gap with the most appropriate word combination. One of the instruments of the monetary policy of the state is __________",
       "options": [
         {
           "key": "A",
@@ -5081,7 +5081,7 @@
         },
         {
           "key": "D",
-          "text": "Change in government"
+          "text": "Change in government spending"
         }
       ],
       "correct": "A",
@@ -5089,15 +5089,15 @@
       "tags": [
         "general"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination. One of the instruments of",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Одним из инструментов денежно-кредитной политики государства является __________",
       "options_ru": [
-        "Collection of funds to the budget",
-        "Issue of money",
-        "Change in the reserve rate",
-        "Change in government"
+        "сбор средств в бюджет",
+        "эмиссия денег",
+        "изменение резервной нормы",
+        "изменение государственных расходов"
       ],
-      "explanation_ru": "Верный ответ — вариант A: «Collection of funds to the budget». Запомните формулировку из банка.",
-      "keyword_hint": "One of the instruments of"
+      "explanation_ru": "Верный ответ — вариант A по вашей версии PDF: сбор средств в бюджет Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "instruments monetary policy state"
     },
     {
       "id": 142,
@@ -5281,7 +5281,7 @@
     },
     {
       "id": 147,
-      "question": "Fill in the gap with the most appropriate word combination. The situation when there is not enough of it and it is difficult to obtain it is",
+      "question": "Fill in the gap with the most appropriate word combination. The situation when there is not enough of it and it is difficult to obtain it is called ____________",
       "options": [
         {
           "key": "A",
@@ -5301,19 +5301,19 @@
         }
       ],
       "correct": "B",
-      "hasNegation": true,
+      "hasNegation": false,
       "tags": [
         "macroeconomics"
       ],
-      "translation_ru": "Fill in the gap with the most appropriate word combination. The situation when there is not enough of it and it is difficult to obtain it is",
+      "translation_ru": "Заполните пропуск наиболее подходящей комбинацией слов. Ситуация, когда чего-то недостаточно и его трудно получить, называется ____________",
       "options_ru": [
-        "Currency inflation",
-        "Scarcity",
-        "Trade imbalance",
-        "Recession"
+        "валютная инфляция",
+        "дефицит / редкость (scarcity)",
+        "торговый дисбаланс",
+        "рецессия"
       ],
-      "explanation_ru": "Верный ответ — вариант B: «Scarcity». Запомните формулировку из банка.",
-      "keyword_hint": "The situation when there is not enough of it and it is difficult to obtain it is"
+      "explanation_ru": "Верный ответ — вариант B: scarcity (дефицит, ограниченность ресурсов) Это соответствует исправленной формулировке из PDF.",
+      "keyword_hint": "not enough difficult obtain"
     },
     {
       "id": 148,
@@ -5434,14 +5434,14 @@
         "Differentiation"
       ],
       "definitions": [
-        "the process of разные множества. calculating a function that represents the rate of change of one variable with respect to another",
+        "the process of calculating a function that represents the rate of change of one variable with respect to another",
         "the quality or state of being dissimilar",
         "the strategy of spreading money across different types of assets"
       ],
       "correct": {
         "Difference": "the quality or state of being dissimilar",
         "Diversification": "the strategy of spreading money across different types of assets",
-        "Differentiation": "the process of разные множества. calculating a function that represents the rate of change of one variable with respect to another"
+        "Differentiation": "the process of calculating a function that represents the rate of change of one variable with respect to another"
       },
       "tags": [
         "general"
@@ -5452,7 +5452,7 @@
         "Differentiation"
       ],
       "definitions_ru": [
-        "the process of разные множества. calculating a function that represents the rate of change of one variable with respect to another",
+        "the process of calculating a function that represents the rate of change of one variable with respect to another",
         "the quality or state of being dissimilar",
         "the strategy of spreading money across different types of assets"
       ],
@@ -5876,12 +5876,12 @@
         "Presumption"
       ],
       "definitions": [
-        "a concept in economics that involves the trad ing, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
+        "a concept in economics that involves the trading, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
         "a term used to describe a conclusion that is made based on incomplete or insufficient information",
         "research method that uses numbers as its basis for making generalizations about a phenomenon"
       ],
       "correct": {
-        "Economic speculations": "a concept in economics that involves the trad ing, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
+        "Economic speculations": "a concept in economics that involves the trading, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
         "Quantitative method": "research method that uses numbers as its basis for making generalizations about a phenomenon",
         "Presumption": "a term used to describe a conclusion that is made based on incomplete or insufficient information"
       },
@@ -5894,7 +5894,7 @@
         "Presumption"
       ],
       "definitions_ru": [
-        "a concept in economics that involves the trad ing, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
+        "a concept in economics that involves the trading, specifically the purchase or selling, of a particular asset based on an assumption that it will become more valuable in the future.",
         "a term used to describe a conclusion that is made based on incomplete or insufficient information",
         "research method that uses numbers as its basis for making generalizations about a phenomenon"
       ],
@@ -6252,11 +6252,11 @@
       ],
       "definitions": [
         "a deliberate and systematic move toward more relevance and value for customers, and as a result growth of your organization",
-        "he analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
+        "the analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
         "are constraints which hold true unless contradicted by another constraint"
       ],
       "correct": {
-        "Competitive landscape": "he analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
+        "Competitive landscape": "the analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
         "Soft constraints": "are constraints which hold true unless contradicted by another constraint",
         "Shifting business model": "a deliberate and systematic move toward more relevance and value for customers, and as a result growth of your organization"
       },
@@ -6270,7 +6270,7 @@
       ],
       "definitions_ru": [
         "a deliberate and systematic move toward more relevance and value for customers, and as a result growth of your organization",
-        "he analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
+        "the analysis of an industry’s structure and dynamics to highlight a company’s market positioning",
         "are constraints which hold true unless contradicted by another constraint"
       ],
       "translation_ru": "Сопоставьте термины и определения (англ. текст ниже).",
