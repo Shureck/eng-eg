@@ -5,7 +5,7 @@ import type { QuestionBank } from "../types";
 const LS_KEY = "angl-en-question-ui-ru";
 
 type Ctx = {
-  /** Показывать формулировки вопросов и ответов на русском (из questions.ru.json) */
+  /** Включить русские переводы из questions.ru.json (показываются мелко под английским текстом) */
   questionUiRussian: boolean;
   setQuestionUiRussian: (v: boolean) => void;
   bank: QuestionBank;

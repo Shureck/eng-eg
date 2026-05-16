@@ -2,18 +2,21 @@ import { useQuestionLang } from "../context/QuestionLangContext";
 import { CheatMnemonicLine } from "../components/CheatMnemonicLine";
 import { getCheatT1, getCheatT2, getCheatT3 } from "../data/lightningCheatSheet";
 import { useLightningDisplayMode, type LightningDisplayMode } from "../lib/lightningDisplayMode";
+import { ruBelowEn, stripQuestionIntro } from "../lib/bilingualLines";
 
 type LightningRow = {
   id: string;
   cheat?: { hook: string; answerKey: string };
-  /** Левая часть в стандартном режиме: формулировка вопроса (как на экзамене) */
-  standardLeft: string;
+  questionEn: string;
+  questionRu: string | null;
+  answerEn: string;
+  answerRu: string | null;
   fallbackK: string;
   fallbackA: string;
 };
 
 export default function Lightning() {
-  const { bank, questionUiRussian } = useQuestionLang();
+  const { bank } = useQuestionLang();
   const [displayMode, setDisplayMode] = useLightningDisplayMode();
 
   const rows: LightningRow[] = [];
@@ -21,54 +24,57 @@ export default function Lightning() {
   for (const q of bank.type1) {
     const ix = q.options.findIndex((o) => o.key === q.correct);
     const ok = q.options.find((o) => o.key === q.correct)?.text ?? "";
-    const ru = ix >= 0 ? q.options_ru[ix] : "";
-    const ans = questionUiRussian ? ru || ok : ok;
-    const standardLeft = (questionUiRussian ? q.translation_ru?.trim() || q.question : q.question).trim();
+    const ruOpt = ix >= 0 ? q.options_ru[ix] : "";
+    const questionEn = stripQuestionIntro(q.question).trim();
     const kw = q.keyword_hint?.trim() || "";
+    const answerEn = `${q.correct}) ${ok}`;
     rows.push({
       id: `t1-${q.id}`,
       cheat: getCheatT1(q.id),
-      standardLeft,
-      fallbackK: kw || standardLeft,
-      fallbackA: `${q.correct}) ${ans}`,
+      questionEn,
+      questionRu: ruBelowEn(questionEn, q.translation_ru),
+      answerEn,
+      answerRu: ruBelowEn(ok, ruOpt),
+      fallbackK: kw || questionEn,
+      fallbackA: answerEn,
     });
   }
   for (const q of bank.type2) {
     const bits = q.terms
       .map((t, i) => {
-        const term = questionUiRussian ? q.terms_ru[i] || t : t;
         const def = q.correct[t];
         const di = q.definitions.indexOf(def);
-        const defShown =
-          questionUiRussian && di >= 0 ? q.definitions_ru[di] || def : def;
-        return `${term} → ${defShown?.slice(0, 80)}…`;
+        const defShown = di >= 0 ? q.definitions[di] : def;
+        return `${t} → ${defShown?.slice(0, 80)}…`;
       })
       .join("; ");
-    const standardLeft = (
-      questionUiRussian
-        ? q.translation_ru?.trim() || q.keyword_hint?.trim()
-        : q.keyword_hint?.trim() || q.translation_ru?.trim() || q.terms.join(", ")
-    ).trim();
+    const questionEn = (q.keyword_hint?.trim() || q.terms.join(", ")).trim();
     rows.push({
       id: `t2-${q.id}`,
       cheat: getCheatT2(q.id),
-      standardLeft,
-      fallbackK: q.keyword_hint?.trim() || standardLeft,
+      questionEn,
+      questionRu: ruBelowEn(questionEn, q.translation_ru),
+      answerEn: bits,
+      answerRu: null,
+      fallbackK: q.keyword_hint?.trim() || questionEn,
       fallbackA: bits,
     });
   }
   for (const q of bank.type3) {
-    const standardLeft = (
-      questionUiRussian
-        ? q.translation_ru?.trim() || q.keyword_hint?.trim() || q.full_sentence
-        : q.full_sentence?.trim() || q.keyword_hint?.trim() || q.translation_ru?.trim()
-    ).trim();
+    const questionEn = (q.keyword_hint?.trim() || q.full_sentence?.trim() || "").trim();
+    const answerEn = q.full_sentence.trim();
+    const questionRu = ruBelowEn(questionEn, q.translation_ru);
+    const rawAnswerRu = ruBelowEn(answerEn, q.translation_ru);
+    const answerRu = rawAnswerRu && rawAnswerRu !== questionRu ? rawAnswerRu : null;
     rows.push({
       id: `t3-${q.id}`,
       cheat: getCheatT3(q.id),
-      standardLeft,
-      fallbackK: q.keyword_hint?.trim() || standardLeft,
-      fallbackA: questionUiRussian ? q.translation_ru || q.full_sentence : q.full_sentence,
+      questionEn,
+      questionRu,
+      answerEn,
+      answerRu,
+      fallbackK: q.keyword_hint?.trim() || questionEn,
+      fallbackA: answerEn,
     });
   }
 
@@ -81,7 +87,7 @@ export default function Lightning() {
 
       {displayMode === "standard" ? (
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          Быстрый список «ключ → ответ». Прокручивайте перед экзаменом. Формулировка и ответ подсвечены отдельно.
+          Английская формулировка и ответ крупно; русский перевод мелко под ними. Прокручивайте перед экзаменом.
         </p>
       ) : (
         <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -100,7 +106,12 @@ export default function Lightning() {
               {i + 1}. <span className="text-slate-400 dark:text-slate-600">{r.id}</span>
             </div>
             {displayMode === "standard" ? (
-              <StandardLightningRow left={r.standardLeft} answer={r.fallbackA} />
+              <StandardLightningRow
+                questionEn={r.questionEn}
+                questionRu={r.questionRu}
+                answerEn={r.answerEn}
+                answerRu={r.answerRu}
+              />
             ) : r.cheat ? (
               <CheatMnemonicLine hook={r.cheat.hook} answerKey={r.cheat.answerKey} />
             ) : (
@@ -117,18 +128,44 @@ export default function Lightning() {
   );
 }
 
-function StandardLightningRow({ left, answer }: { left: string; answer: string }) {
+function StandardLightningRow({
+  questionEn,
+  questionRu,
+  answerEn,
+  answerRu,
+}: {
+  questionEn: string;
+  questionRu: string | null;
+  answerEn: string;
+  answerRu: string | null;
+}) {
   return (
-    <div className="font-mono text-[13px] sm:text-sm leading-relaxed flex flex-wrap items-baseline gap-x-2 gap-y-2">
-      <mark className="rounded-md px-2 py-1 bg-sky-100 text-sky-900 shadow-sm ring-1 ring-sky-300/60 dark:bg-sky-500/20 dark:text-sky-100 dark:ring-sky-400/25 max-w-full whitespace-pre-wrap break-words">
-        {left}
-      </mark>
-      <span className="text-slate-400 dark:text-slate-500 shrink-0 select-none" aria-hidden>
-        →
-      </span>
-      <mark className="rounded-md px-2 py-1 bg-violet-100 text-violet-950 shadow-sm ring-1 ring-violet-300/50 dark:bg-violet-500/20 dark:text-violet-100 dark:ring-violet-400/25 max-w-full whitespace-pre-wrap break-words">
-        {answer}
-      </mark>
+    <div className="font-mono text-[13px] sm:text-sm leading-relaxed flex flex-col gap-3">
+      <div className="flex flex-wrap items-start gap-x-2 gap-y-2">
+        <div className="flex flex-col gap-1 min-w-0 max-w-full">
+          <mark className="rounded-md px-2 py-1.5 bg-sky-100 text-sky-900 shadow-sm ring-1 ring-sky-300/60 dark:bg-sky-500/20 dark:text-sky-100 dark:ring-sky-400/25 whitespace-pre-wrap break-words text-[15px] sm:text-base font-medium">
+            {questionEn}
+          </mark>
+          {questionRu ? (
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 pl-0.5 whitespace-pre-wrap break-words leading-snug">
+              {questionRu}
+            </p>
+          ) : null}
+        </div>
+        <span className="text-slate-400 dark:text-slate-500 shrink-0 select-none self-center" aria-hidden>
+          →
+        </span>
+        <div className="flex flex-col gap-1 min-w-0 max-w-full flex-1">
+          <mark className="rounded-md px-2 py-1.5 bg-violet-100 text-violet-950 shadow-sm ring-1 ring-violet-300/50 dark:bg-violet-500/20 dark:text-violet-100 dark:ring-violet-400/25 whitespace-pre-wrap break-words text-[15px] sm:text-base font-medium">
+            {answerEn}
+          </mark>
+          {answerRu ? (
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 pl-0.5 whitespace-pre-wrap break-words leading-snug">
+              {answerRu}
+            </p>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }

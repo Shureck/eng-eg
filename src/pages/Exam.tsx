@@ -8,6 +8,7 @@ import type { AnyQ } from "../types";
 import { useProgress } from "../hooks/useProgress";
 import { defaultProgress } from "../lib/db";
 import { markHard, onWrong } from "../lib/srs";
+import { ruBelowEn, stripQuestionIntro } from "../lib/bilingualLines";
 
 const SEC = 35 * 60;
 
@@ -89,32 +90,45 @@ export default function Exam() {
                 <span className={results[ix] ? "text-emerald-600" : "text-red-600"}>{results[ix] ? "Верно" : "Ошибка"}</span>
               </div>
               {q.kind === "t1" && (
-                <div className="text-sm space-y-2">
-                  <p>{q.data.question}</p>
-                  <p>
+                <div className="space-y-2">
+                  <p className="text-base font-medium text-slate-900 dark:text-slate-100 whitespace-pre-wrap">
+                    {stripQuestionIntro(q.data.question)}
+                  </p>
+                  {ruBelowEn(stripQuestionIntro(q.data.question), q.data.translation_ru) && (
+                    <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap border-l-4 border-sky-500/60 pl-3">
+                      {ruBelowEn(stripQuestionIntro(q.data.question), q.data.translation_ru)}
+                    </p>
+                  )}
+                  <p className="text-base text-slate-900 dark:text-slate-100">
                     Ответ: <strong>{q.data.correct}</strong>{" "}
                     {q.data.options.find((o) => o.key === q.data.correct)?.text}
                   </p>
-                  <p className="text-slate-600 dark:text-slate-400">{q.data.translation_ru}</p>
-                  <p className="text-xs">{q.data.explanation_ru}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400">{q.data.explanation_ru}</p>
                 </div>
               )}
               {q.kind === "t2" && (
-                <div className="text-sm space-y-2">
-                  <p>{q.data.translation_ru}</p>
-                  <ul className="list-disc pl-5">
-                    {q.data.terms.map((t) => (
+                <div className="space-y-2">
+                  <ul className="list-disc pl-5 space-y-2">
+                    {q.data.terms.map((t, i) => (
                       <li key={t}>
-                        <strong>{t}</strong> → {q.data.correct[t]}
+                        <strong className="text-base text-slate-900 dark:text-slate-100">{t}</strong>
+                        {ruBelowEn(t, q.data.terms_ru[i]) && (
+                          <span className="block text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+                            {ruBelowEn(t, q.data.terms_ru[i])}
+                          </span>
+                        )}
+                        <span className="text-sm text-slate-700 dark:text-slate-300"> → {q.data.correct[t]}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
               {q.kind === "t3" && (
-                <div className="text-sm space-y-2">
-                  <p className="font-medium">{q.data.full_sentence}</p>
-                  <p className="text-slate-600 dark:text-slate-400">{q.data.translation_ru}</p>
+                <div className="space-y-2">
+                  <p className="text-base font-medium text-slate-900 dark:text-slate-100">{q.data.full_sentence}</p>
+                  {ruBelowEn(q.data.full_sentence, q.data.translation_ru) && (
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{ruBelowEn(q.data.full_sentence, q.data.translation_ru)}</p>
+                  )}
                 </div>
               )}
             </div>

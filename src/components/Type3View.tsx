@@ -15,20 +15,19 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { Type3Q } from "../types";
+import { ruBelowEn, type3InstructionEn } from "../lib/bilingualLines";
+
+const INST_EN = type3InstructionEn();
 
 function Row({
   id,
   text,
   ru,
-  showRu,
-  questionUiRussian,
   disabled,
 }: {
   id: string;
   text: string;
   ru: string;
-  showRu: boolean;
-  questionUiRussian: boolean;
   disabled: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
@@ -36,9 +35,7 @@ function Row({
     transform: CSS.Transform.toString(transform),
     transition,
   };
-  const primary = questionUiRussian ? ru || text : text;
-  const secondary =
-    questionUiRussian ? text : showRu ? ru : "";
+  const secondary = ruBelowEn(text, ru);
   return (
     <div
       ref={setNodeRef}
@@ -56,11 +53,11 @@ function Row({
         ⠿
       </button>
       <div className="flex-1">
-        <div>
-          <span className="font-bold">{id})</span> {primary}
+        <div className="text-base md:text-lg text-slate-900 dark:text-slate-100 font-medium">
+          <span className="font-bold">{id})</span> {text}
         </div>
         {secondary ? (
-          <div className="text-sm text-slate-600 dark:text-slate-400">{secondary}</div>
+          <div className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">{secondary}</div>
         ) : null}
       </div>
     </div>
@@ -71,8 +68,8 @@ export function Type3View({
   q,
   order,
   setOrder,
-  showRu,
-  questionUiRussian,
+  showRu: _showRu,
+  questionUiRussian: _questionUiRussian,
   reveal,
   disabled,
   showHint,
@@ -104,8 +101,7 @@ export function Type3View({
   const sentence = order
     .map((k) => {
       const w = byKey[k];
-      if (!w) return "";
-      return questionUiRussian ? w.text_ru || w.text : w.text;
+      return w ? w.text : "";
     })
     .join(" ");
   const ok = order.every((k, i) => k === q.correct_order[i]);
@@ -120,33 +116,42 @@ export function Type3View({
 
   const firstKey = q.correct_order[0];
   const firstW = firstKey ? byKey[firstKey] : undefined;
-  const firstHint =
-    firstW &&
-    (questionUiRussian ? firstW.text_ru || firstW.text : firstW.text);
 
   const useKeywordOnly = promptVariant === "keyword";
   const keywordOrFallback =
-    q.keyword_hint?.trim() || q.translation_ru || "Расставьте фрагменты в правильном порядке";
+    q.keyword_hint?.trim() || q.full_sentence || INST_EN;
 
   return (
     <div className="space-y-4">
       {useKeywordOnly ? (
         <>
-          <p className="text-xl leading-snug font-semibold whitespace-pre-wrap">{keywordOrFallback}</p>
-          <p className="text-sm text-slate-600 dark:text-slate-400">Расставьте фрагменты в правильном порядке</p>
+          <p className="text-xl leading-snug font-semibold whitespace-pre-wrap text-slate-900 dark:text-slate-100">
+            {keywordOrFallback}
+          </p>
+          {ruBelowEn(keywordOrFallback, q.translation_ru) && (
+            <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 pl-3">
+              {ruBelowEn(keywordOrFallback, q.translation_ru)}
+            </p>
+          )}
+          <p className="text-xs text-slate-500 dark:text-slate-400">{INST_EN}</p>
         </>
       ) : (
-        <p className="text-lg">Расставьте фрагменты в правильном порядке</p>
+        <>
+          <p className="text-lg md:text-xl font-medium text-slate-900 dark:text-slate-100">{INST_EN}</p>
+          {ruBelowEn(INST_EN, q.translation_ru) && (
+            <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-snug border-l-4 border-sky-500/70 pl-3">
+              {ruBelowEn(INST_EN, q.translation_ru)}
+            </p>
+          )}
+        </>
       )}
-      {!useKeywordOnly && showRu && !reveal && !questionUiRussian && (
-        <p className="text-slate-600 dark:text-slate-400">{q.translation_ru}</p>
-      )}
-      {!useKeywordOnly && questionUiRussian && !reveal && (
-        <p className="text-slate-600 dark:text-slate-400 text-sm">{q.translation_ru}</p>
-      )}
-      {showHint && !reveal && firstHint && (
-        <p className="text-sm rounded-lg bg-amber-500/15 px-3 py-2">
-          Подсказка: первый фрагмент — <strong>{firstHint}</strong>
+      {showHint && !reveal && firstW && (
+        <p className="text-sm rounded-lg bg-amber-500/15 px-3 py-2 space-y-1">
+          <span className="block text-slate-600 dark:text-slate-400">Подсказка: первый фрагмент —</span>
+          <strong className="text-base text-slate-900 dark:text-slate-100">{firstW.text}</strong>
+          {ruBelowEn(firstW.text, firstW.text_ru) && (
+            <span className="block text-xs text-slate-600 dark:text-slate-400">{ruBelowEn(firstW.text, firstW.text_ru)}</span>
+          )}
         </p>
       )}
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
@@ -155,14 +160,7 @@ export function Type3View({
             {order.map((key, ix) => (
               <div key={key} className="flex gap-1 items-center">
                 <div className="flex-1">
-                  <Row
-                    id={key}
-                    text={byKey[key].text}
-                    ru={byKey[key].text_ru}
-                    showRu={showRu}
-                    questionUiRussian={questionUiRussian}
-                    disabled={disabled}
-                  />
+                  <Row id={key} text={byKey[key].text} ru={byKey[key].text_ru} disabled={disabled} />
                 </div>
                 <div className="flex flex-col gap-1">
                   <button
@@ -189,8 +187,10 @@ export function Type3View({
       </DndContext>
       {reveal && (
         <div className="rounded-xl bg-slate-100 dark:bg-slate-900 p-4 space-y-2">
-          <p className="font-medium">{q.full_sentence}</p>
-          <p className="text-slate-700 dark:text-slate-300">{q.translation_ru}</p>
+          <p className="font-medium text-lg text-slate-900 dark:text-slate-100">{q.full_sentence}</p>
+          {ruBelowEn(q.full_sentence, q.translation_ru) && (
+            <p className="text-sm text-slate-600 dark:text-slate-300">{ruBelowEn(q.full_sentence, q.translation_ru)}</p>
+          )}
           <p className="text-sm">{q.explanation_ru}</p>
         </div>
       )}
@@ -200,7 +200,10 @@ export function Type3View({
         </p>
       )}
       {!reveal && (
-        <p className="text-xs text-slate-500 dark:text-slate-400 break-words">Сборка: {sentence}</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400 break-words">
+          <span className="font-medium text-slate-600 dark:text-slate-400">Preview: </span>
+          {sentence}
+        </p>
       )}
     </div>
   );

@@ -47,7 +47,7 @@ export default function AppShell() {
             </NavLink>
             <button
               type="button"
-              title="Показывать формулировки вопросов и вариантов на русском"
+              title="Русские переводы из банка (подстрочник под английским текстом)"
               className={`min-h-touch px-3 rounded-lg border text-sm ${
                 questionUiRussian
                   ? "border-sky-600 bg-sky-500/15 text-sky-800 dark:text-sky-200"
