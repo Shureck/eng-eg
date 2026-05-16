@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { useQuestionLang } from "../context/QuestionLangContext";
 import { CheatMnemonicLine } from "../components/CheatMnemonicLine";
 import { getCheatT1, getCheatT2, getCheatT3 } from "../data/lightningCheatSheet";
@@ -18,6 +19,11 @@ type LightningRow = {
 export default function Lightning() {
   const { bank } = useQuestionLang();
   const [displayMode, setDisplayMode] = useLightningDisplayMode();
+  /** В режиме мнемоники: какие карточки показывают полный вопрос и ответ */
+  const [mnemonicExpanded, setMnemonicExpanded] = useState<Record<string, boolean>>({});
+  const toggleMnemonic = useCallback((id: string) => {
+    setMnemonicExpanded((m) => ({ ...m, [id]: !m[id] }));
+  }, []);
 
   const rows: LightningRow[] = [];
 
@@ -92,7 +98,8 @@ export default function Lightning() {
       ) : (
         <p className="text-sm text-slate-600 dark:text-slate-400">
           Цветная мнемоника: <strong>якоря из таблицы</strong> → <strong>ключ к ответу</strong>. Если строки в таблице нет —
-          показывается короткий «ключ → ответ» по данным банка.
+          показывается короткий «ключ → ответ» по данным банка. <strong>Нажмите на карточку</strong>, чтобы под мнемоникой
+          развернуть полный текст вопроса и ответа.
         </p>
       )}
 
@@ -112,14 +119,18 @@ export default function Lightning() {
                 answerEn={r.answerEn}
                 answerRu={r.answerRu}
               />
-            ) : r.cheat ? (
-              <CheatMnemonicLine hook={r.cheat.hook} answerKey={r.cheat.answerKey} />
             ) : (
-              <div className="font-mono flex flex-wrap items-baseline gap-2 text-sm">
-                <span className="text-sky-600 dark:text-sky-400">{r.fallbackK}</span>
-                <span className="text-slate-400">→</span>
-                <span className="text-slate-900 dark:text-slate-100">{r.fallbackA}</span>
-              </div>
+              <MnemonicLightningBlock
+                expanded={!!mnemonicExpanded[r.id]}
+                onToggle={() => toggleMnemonic(r.id)}
+                cheat={r.cheat}
+                fallbackK={r.fallbackK}
+                fallbackA={r.fallbackA}
+                questionEn={r.questionEn}
+                questionRu={r.questionRu}
+                answerEn={r.answerEn}
+                answerRu={r.answerRu}
+              />
             )}
           </li>
         ))}
@@ -139,23 +150,24 @@ function StandardLightningRow({
   answerEn: string;
   answerRu: string | null;
 }) {
+  /** Две строки: вопрос на всю ширину, затем стрелка + ответ на всю ширину — иначе flex-row сжимает блок ответа в «вертикальную колонку». */
   return (
-    <div className="font-mono text-[13px] sm:text-sm leading-relaxed flex flex-col gap-3">
-      <div className="flex flex-wrap items-start gap-x-2 gap-y-2">
-        <div className="flex flex-col gap-1 min-w-0 max-w-full">
-          <mark className="rounded-md px-2 py-1.5 bg-sky-100 text-sky-900 shadow-sm ring-1 ring-sky-300/60 dark:bg-sky-500/20 dark:text-sky-100 dark:ring-sky-400/25 whitespace-pre-wrap break-words text-[15px] sm:text-base font-medium">
-            {questionEn}
-          </mark>
-          {questionRu ? (
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 pl-0.5 whitespace-pre-wrap break-words leading-snug">
-              {questionRu}
-            </p>
-          ) : null}
-        </div>
-        <span className="text-slate-400 dark:text-slate-500 shrink-0 select-none self-center" aria-hidden>
+    <div className="font-mono text-[13px] sm:text-sm leading-relaxed flex flex-col gap-3 w-full min-w-0">
+      <div className="flex flex-col gap-1 min-w-0 w-full">
+        <mark className="rounded-md px-2 py-1.5 bg-sky-100 text-sky-900 shadow-sm ring-1 ring-sky-300/60 dark:bg-sky-500/20 dark:text-sky-100 dark:ring-sky-400/25 whitespace-pre-wrap break-words text-[15px] sm:text-base font-medium">
+          {questionEn}
+        </mark>
+        {questionRu ? (
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 pl-0.5 whitespace-pre-wrap break-words leading-snug">
+            {questionRu}
+          </p>
+        ) : null}
+      </div>
+      <div className="flex items-start gap-2 w-full min-w-0">
+        <span className="text-slate-400 dark:text-slate-500 shrink-0 select-none pt-0.5" aria-hidden>
           →
         </span>
-        <div className="flex flex-col gap-1 min-w-0 max-w-full flex-1">
+        <div className="flex flex-col gap-1 min-w-0 flex-1">
           <mark className="rounded-md px-2 py-1.5 bg-violet-100 text-violet-950 shadow-sm ring-1 ring-violet-300/50 dark:bg-violet-500/20 dark:text-violet-100 dark:ring-violet-400/25 whitespace-pre-wrap break-words text-[15px] sm:text-base font-medium">
             {answerEn}
           </mark>
@@ -166,6 +178,67 @@ function StandardLightningRow({
           ) : null}
         </div>
       </div>
+    </div>
+  );
+}
+
+function MnemonicLightningBlock({
+  expanded,
+  onToggle,
+  cheat,
+  fallbackK,
+  fallbackA,
+  questionEn,
+  questionRu,
+  answerEn,
+  answerRu,
+}: {
+  expanded: boolean;
+  onToggle: () => void;
+  cheat: LightningRow["cheat"];
+  fallbackK: string;
+  fallbackA: string;
+  questionEn: string;
+  questionRu: string | null;
+  answerEn: string;
+  answerRu: string | null;
+}) {
+  return (
+    <div className="w-full min-w-0">
+      <button
+        type="button"
+        className="w-full text-left rounded-lg border border-slate-200/80 dark:border-slate-600/60 bg-slate-50/80 dark:bg-slate-800/40 px-3 py-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 min-w-0"
+        aria-expanded={expanded}
+        onClick={onToggle}
+      >
+        <div className="min-w-0">
+          {cheat ? (
+            <CheatMnemonicLine hook={cheat.hook} answerKey={cheat.answerKey} />
+          ) : (
+            <div className="font-mono flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm min-w-0">
+              <span className="text-sky-600 dark:text-sky-400 break-words">{fallbackK}</span>
+              <span className="text-slate-400 shrink-0">→</span>
+              <span className="text-slate-900 dark:text-slate-100 break-words">{fallbackA}</span>
+            </div>
+          )}
+        </div>
+        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
+          {expanded ? "Нажмите, чтобы скрыть полный текст" : "Нажмите, чтобы показать полный вопрос и ответ"}
+        </p>
+      </button>
+      {expanded ? (
+        <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-600 space-y-1">
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            Полный текст
+          </p>
+          <StandardLightningRow
+            questionEn={questionEn}
+            questionRu={questionRu}
+            answerEn={answerEn}
+            answerRu={answerRu}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
